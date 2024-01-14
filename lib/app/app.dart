@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    FlutterNativeSplash.remove();
+
+    super.initState();
+  }
 
   // This widget is the root of your application.
   @override

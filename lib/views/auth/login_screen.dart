@@ -22,7 +22,7 @@ class MyLoginScreen extends StatelessWidget {
               ClipPath(
                 clipper: WaveClipperTwo(),
                 child: Container(
-                  height: MediaQuery.sizeOf(context).height * 0.33,
+                  height: MediaQuery.sizeOf(context).height * 0.3,
                   width: double.infinity,
                   color: context.colorScheme.primary,
                   child: Padding(
