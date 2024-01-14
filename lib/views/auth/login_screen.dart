@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/constants/tags.dart';
+import 'package:mobile/gen/assets.gen.dart';
 import 'package:mobile/repositories/auth_repository.dart';
-import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/clippers/login_clipper.dart';
 import 'package:mobile/utils/extensions.dart';
 
@@ -17,16 +17,15 @@ class MyLoginScreen extends StatelessWidget {
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ClipPath(
                 clipper: WaveClipperTwo(),
                 child: Container(
-                  height: MediaQuery.sizeOf(context).height * 0.35,
+                  height: MediaQuery.sizeOf(context).height * 0.33,
                   width: double.infinity,
-                  color: Theme.of(context).primaryColor,
+                  color: context.colorScheme.primary,
                   child: Padding(
-                    padding: const EdgeInsets.all(8),
+                    padding: horizontalPadding16,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,13 +34,10 @@ class MyLoginScreen extends StatelessWidget {
                           tag: HeroTags.fullTextLogo,
                           child: Text(
                             'Udhar Kab Dega',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge!
-                                .copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: context.textTheme.headlineLarge!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Text(
@@ -55,38 +51,21 @@ class MyLoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              emptyWidget,
-              emptyWidget,
-              emptyWidget,
-              emptyWidget,
+              const Spacer(flex: 4),
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    AuthButton(
-                      label: 'Sign in With Google',
-                      onTap: () async {
-                        try {
-                          await AuthRepository().signInWithGoogle();
-                        } catch (e) {
-                          log('object $e');
-                        }
-                      },
-                    ),
-                    verticalMargin24,
-                    AuthButton(
-                      label: 'Sign in With Apple',
-                      onTap: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          MyRoutes.dashboard,
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ],
+                padding: horizontalPadding16,
+                child: AuthButton(
+                  label: 'Sign in With Google',
+                  onTap: () async {
+                    try {
+                      await AuthRepository().signInWithGoogle();
+                    } catch (e) {
+                      log('object $e');
+                    }
+                  },
                 ),
               ),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -116,6 +95,7 @@ class MyLoginScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              verticalMargin16,
             ],
           ),
         ),
@@ -140,7 +120,7 @@ class AuthButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
-        height: 50,
+        height: kToolbarHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Theme.of(context).colorScheme.primary,
@@ -148,6 +128,10 @@ class AuthButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Assets.svg.googleIcon.svg(
+              width: kToolbarHeight / 2.2,
+            ),
+            horizontalMargin12,
             Text(
               label,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
