@@ -23,15 +23,8 @@ final navItems = [
   },
   {
     'icon': Icons.account_box,
-    'label': 'Account',
+    'label': 'You',
   },
-];
-
-final _screens = [
-  const MyGroupScreen(),
-  const MyFriendScreen(),
-  const MyActivityScreen(),
-  const MyAccountScreen(),
 ];
 
 class MyDashboard extends StatefulWidget {
@@ -61,7 +54,15 @@ class _MyDashboardState extends State<MyDashboard> {
           ),
         ),
       ),
-      body: _screens[selectedIndex],
+      body: IndexedStack(
+        index: selectedIndex,
+        children: const [
+          MyGroupScreen(),
+          MyFriendScreen(),
+          MyActivityScreen(),
+          MyAccountScreen(),
+        ],
+      ),
       bottomNavigationBar: SizedBox(
         height: kToolbarHeight + 20,
         child: Padding(

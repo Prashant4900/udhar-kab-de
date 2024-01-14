@@ -10,7 +10,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Udhar Kab Dega',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF030065),
@@ -24,7 +25,6 @@ class MyApp extends StatelessWidget {
           foregroundColor: context.colorScheme.onPrimary,
           titleTextStyle: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.bold,
-            // color: context.colorScheme.onPrimary,
           ),
         ),
         textTheme: GoogleFonts.poppinsTextTheme(),
@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: MyRoutes.splashScreen,
       onGenerateRoute: RouteManager.generateRoute,
-      // home: const MySplashScreen(),
     );
   }
 }
