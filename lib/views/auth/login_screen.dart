@@ -5,6 +5,7 @@ import 'package:mobile/constants/commons.dart';
 import 'package:mobile/constants/tags.dart';
 import 'package:mobile/gen/assets.gen.dart';
 import 'package:mobile/repositories/auth_repository.dart';
+import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/clippers/login_clipper.dart';
 import 'package:mobile/utils/extensions.dart';
 
@@ -55,7 +56,24 @@ class MyLoginScreen extends StatelessWidget {
               Padding(
                 padding: horizontalPadding16,
                 child: AuthButton(
+                  label: 'Continue with phone',
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      MyRoutes.phoneAuthScreen,
+                    );
+                  },
+                ),
+              ),
+              verticalMargin16,
+              Padding(
+                padding: horizontalPadding16,
+                child: AuthButton(
                   label: 'Sign in With Google',
+                  icon: Assets.svg.googleIcon.svg(
+                    width: kToolbarHeight / 2.2,
+                  ),
+                  backgroundColor: Colors.black,
                   onTap: () async {
                     try {
                       await AuthRepository().signInWithGoogle();
@@ -108,11 +126,15 @@ class AuthButton extends StatelessWidget {
   const AuthButton({
     required this.onTap,
     required this.label,
+    this.icon,
+    this.backgroundColor,
     super.key,
   });
 
   final VoidCallback onTap;
   final String label;
+  final Widget? icon;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -123,15 +145,15 @@ class AuthButton extends StatelessWidget {
         height: kToolbarHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Theme.of(context).colorScheme.primary,
+          color: backgroundColor ?? context.colorScheme.primary,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Assets.svg.googleIcon.svg(
-              width: kToolbarHeight / 2.2,
-            ),
-            horizontalMargin12,
+            if (icon != null) ...[
+              icon!,
+              horizontalMargin12,
+            ],
             Text(
               label,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(

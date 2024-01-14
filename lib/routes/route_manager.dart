@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/views/auth/login_screen.dart';
+import 'package:mobile/views/auth/phone_auth_screen.dart';
 import 'package:mobile/views/dashboard/dashboard.dart';
 import 'package:mobile/views/friends/add_friend_screen.dart';
 import 'package:mobile/views/splash/splash_screen.dart';
@@ -16,6 +17,10 @@ class RouteManager {
       case MyRoutes.splashScreen:
         return MaterialPageRoute(
           builder: (_) => const MySplashScreen(),
+        );
+      case MyRoutes.phoneAuthScreen:
+        return MaterialPageRoute(
+          builder: (_) => const MyPhoneAuthScreen(),
         );
       case MyRoutes.addFriendScreen:
         return PageRouteBuilder<dynamic>(

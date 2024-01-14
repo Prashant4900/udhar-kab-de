@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
           scrolledUnderElevation: 0,
           centerTitle: false,
-          backgroundColor: context.colorScheme.primary,
+          backgroundColor: const Color(0xFF030065),
           foregroundColor: context.colorScheme.onPrimary,
           titleTextStyle: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.bold,
