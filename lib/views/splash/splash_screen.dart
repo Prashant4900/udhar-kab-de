@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/tags.dart';
 import 'package:mobile/routes/route_manager.dart';
+import 'package:mobile/utilities/share_pref/app_prefs.dart';
 import 'package:mobile/widget/text_widgets.dart';
 
 class MySplashScreen extends StatefulWidget {
@@ -12,12 +13,23 @@ class MySplashScreen extends StatefulWidget {
 
 class _MySplashScreenState extends State<MySplashScreen> {
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final userID = AppPrefHelper.getUserID();
+
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        Navigator.pushNamed(context, MyRoutes.authScreen);
+        if (userID != '') {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            MyRoutes.dashboard,
+            (_) => false,
+          );
+        } else {
+          Navigator.pushNamed(context, MyRoutes.authScreen);
+        }
       },
     );
   }
