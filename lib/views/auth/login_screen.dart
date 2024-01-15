@@ -56,6 +56,10 @@ class MyLoginScreen extends StatelessWidget {
               Padding(
                 padding: horizontalPadding16,
                 child: AuthButton(
+                  icon: Icon(
+                    Icons.phone,
+                    color: context.colorScheme.onPrimary,
+                  ),
                   label: 'Continue with phone',
                   onTap: () {
                     Navigator.pushNamed(

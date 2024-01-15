@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
+import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/auth/login_screen.dart';
 import 'package:pinput/pinput.dart';
@@ -15,7 +18,9 @@ class MyPhoneAuthScreen extends StatefulWidget {
 class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
   late TextEditingController phoneController;
   late TextEditingController pinController;
-
+  int start = 30;
+  bool wait = false;
+  var buttonName = "Send";
   @override
   void initState() {
     phoneController = TextEditingController();
@@ -28,6 +33,22 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
     phoneController.dispose();
     pinController.dispose();
     super.dispose();
+  }
+
+  void startTimer() {
+    const onsec = Duration(seconds: 1);
+    Timer timer = Timer.periodic(onsec, (timer) {
+      if (start == 0) {
+        setState(() {
+          wait = false;
+          start = 30;
+        });
+      } else {
+        setState(() {
+          start--;
+        });
+      }
+    });
   }
 
   @override
@@ -59,13 +80,6 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                 color: context.colorScheme.primary,
               ),
             ),
-            verticalMargin12,
-            Text(
-              'Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
-              style: context.textTheme.bodySmall!.copyWith(
-                color: context.colorScheme.primary,
-              ),
-            ),
             verticalMargin24,
             Container(
               height: kToolbarHeight,
@@ -74,18 +88,106 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: TextField(
-                  controller: phoneController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter Mobile Number',
-                    border: InputBorder.none,
-                    prefixIcon: Icon(CupertinoIcons.phone),
+                child: Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(),
+                  child: TextFormField(
+                    controller: phoneController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Your Phone Number',
+                      hintStyle: context.textTheme.bodyMedium,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 15,
+                      ),
+                      prefixIcon: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                        child: Icon(Icons.phone_outlined),
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 15,
+                        ),
+                        child: InkWell(
+                          child: Text(
+                            buttonName,
+                            style: TextStyle(
+                              color: wait ? Colors.grey : Colors.blue,
+                            ),
+                          ),
+                          onTap: wait
+                              ? null
+                              : () async {
+                                  startTimer();
+                                  setState(() {
+                                    start = 30;
+                                    wait = true;
+                                    buttonName = 'Resend';
+                                  });
+                                  //TODO: Code for sending OTP
+                                  try {} catch (e) {}
+                                },
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-            verticalMargin24,
+            verticalMargin12,
+            if (wait)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Resend in ',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: context.colorScheme.onPrimaryContainer),
+                  ),
+                  Text(
+                    '00: $start',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: Colors.red),
+                  ),
+                  Text(
+                    ' second',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: context.colorScheme.onPrimaryContainer),
+                  ),
+                ],
+              ),
+            verticalMargin12,
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.grey,
+                      margin:
+                          const EdgeInsetsDirectional.symmetric(horizontal: 12),
+                    ),
+                  ),
+                  const Text('Enter 6 Digit OTP'),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.grey,
+                      margin:
+                          const EdgeInsetsDirectional.symmetric(horizontal: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            verticalMargin12,
             Center(
               child: Pinput(
                 length: 6,
@@ -100,13 +202,13 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
             ),
             const Spacer(),
             AuthButton(
-              onTap: () async {
-                // await AuthRepository()
-                //     .validateOTP('65a42b33ee0bd240146e', '310258');
+              onTap: () {
+                print(pinController.text);
+                AuthRepository().validateOTP('65a520c8a4a226c846cb', '737624');
+                //TODO: OTP verification code
               },
-              label: 'OTP Request',
+              label: 'Lets Go',
             ),
-            verticalMargin48,
           ],
         ),
       ),

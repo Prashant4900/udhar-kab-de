@@ -1,38 +1,50 @@
 part of 'auth_bloc.dart';
 
-enum AuthStatus { initial, loading, success, failure }
+enum AccountStatus {
+  initial,
+  loading,
+  accountCreated,
+  accountVerified,
+  accountLogedOut,
+  failure
+}
 
 class AuthState extends Equatable {
   const AuthState({
-    this.status,
     this.user,
     this.message,
+    this.userId,
+    this.isOTPResended,
+    this.accountStatus,
   });
 
-  final AuthStatus? status;
+  
+  final AccountStatus? accountStatus;
   final User? user;
   final String? message;
+  final String? userId;
+  final bool? isOTPResended;
 
   static AuthState initial() => const AuthState(
-        status: AuthStatus.initial,
+        accountStatus: AccountStatus.initial,
+        isOTPResended: false,
       );
 
-  AuthState copyWith({
-    AuthStatus? status,
-    User? user,
-    String? message,
-  }) {
+  AuthState copyWith(
+      {AccountStatus? accountStatus,
+      User? user,
+      String? message,
+      String? userId,
+      bool? isOTPResended}) {
     return AuthState(
-      status: status ?? this.status,
-      user: user ?? this.user,
-      message: message ?? this.message,
-    );
+        accountStatus: accountStatus ?? this.accountStatus,
+        user: user ?? this.user,
+        message: message ?? this.message,
+        userId: userId ?? this.userId,
+        isOTPResended: isOTPResended ?? this.isOTPResended);
   }
 
   @override
-  List<Object> get props => [
-        status!,
-        user!,
-        message!,
-      ];
+  List<Object> get props =>
+      [accountStatus!, user!, message!, userId!, isOTPResended!];
 }

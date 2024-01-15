@@ -33,13 +33,14 @@ class AuthRepository {
     }
   }
 
-  Future<void> validateOTP(String userId, String otp) async {
+  Future<String> validateOTP(String userId, String otp) async {
     try {
       final session = await account.updatePhoneSession(
         userId: userId,
         secret: otp,
       );
       log('session: ${session.countryName}');
+      return session.userId;
     } catch (e) {
       throw Exception(e);
     }

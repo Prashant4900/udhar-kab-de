@@ -13,6 +13,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthState.initial()) {
     on<SignInWithGoogleEvent>(_signInWithGoogle);
     on<SignOutEvent>(_signOut);
+    on<PhoneAuthInitiateEvent>(_phoneAuthInitiate);
+    on<ValidateOTPEvent>(_validateOTP);
   }
 
   final authRepository = getIt<AuthRepository>();
@@ -21,15 +23,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignInWithGoogleEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(status: AuthStatus.loading));
+    emit(state.copyWith(accountStatus: AccountStatus.loading));
     try {
       final user = await authRepository.signInWithGoogle();
-      emit(state.copyWith(status: AuthStatus.success, user: user));
+      emit(state.copyWith(
+          accountStatus: AccountStatus.accountVerified, user: user));
     } catch (e) {
       final message = e.toString();
       emit(
         state.copyWith(
-          status: AuthStatus.failure,
+          accountStatus: AccountStatus.failure,
           message: 'Google Sign In Failed: $message',
         ),
       );
@@ -40,23 +43,83 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignOutEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(status: AuthStatus.loading));
+    emit(state.copyWith(accountStatus: AccountStatus.loading));
 
     try {
       await authRepository.signOut();
       emit(
-        state.copyWith(
-          status: AuthStatus.success,
-        ),
+        state.copyWith(accountStatus: AccountStatus.accountLogedOut),
       );
     } catch (e) {
       final message = e.toString();
       emit(
         state.copyWith(
-          status: AuthStatus.failure,
+          accountStatus: AccountStatus.failure,
           message: message,
         ),
       );
     }
   }
+
+  FutureOr<void> _phoneAuthInitiate(
+    PhoneAuthInitiateEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(
+      accountStatus: AccountStatus.loading,
+    ));
+
+    try {
+      final userId = await authRepository.initiatePhoneAuth(event.number);
+      if (userId == '') {
+        emit(
+          state.copyWith(
+            accountStatus: AccountStatus.failure,
+            message: 'Something Went Wrong! Try after some time',
+          ),
+        );
+      } else {
+        emit(state.copyWith(
+            accountStatus: AccountStatus.accountCreated, userId: userId));
+      }
+    } catch (e) {
+      final message = e.toString();
+      emit(
+        state.copyWith(
+          accountStatus: AccountStatus.failure,
+          message: message,
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _validateOTP(
+    ValidateOTPEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(accountStatus: AccountStatus.loading));
+    try {
+      final userId = await authRepository.validateOTP(state.userId!, event.otp);
+      if (userId == state.userId) {
+        //Here userId is of validateOTP and state.userId is of Phone number sending
+        emit(state.copyWith(
+          accountStatus: AccountStatus.accountVerified,
+          userId: userId,
+        ));
+      } else {
+        emit(
+          state.copyWith(
+            accountStatus: AccountStatus.failure,
+            message: 'Something went wrong',
+          ),
+        );
+      }
+    } catch (e) {
+      final message = e.toString();
+      emit(state.copyWith(
+          accountStatus: AccountStatus.failure, message: message));
+    }
+  }
 }
+
+//ui -> event ->  bloc -> state -> UI
