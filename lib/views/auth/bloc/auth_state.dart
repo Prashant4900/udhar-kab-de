@@ -5,7 +5,7 @@ enum AccountStatus {
   loading,
   accountCreated,
   accountVerified,
-  accountLogedOut,
+  accountLoggedOut,
   failure
 }
 
@@ -14,37 +14,43 @@ class AuthState extends Equatable {
     this.user,
     this.message,
     this.userId,
-    this.isOTPResended,
+    this.isOTPResend,
     this.accountStatus,
   });
 
-  
   final AccountStatus? accountStatus;
   final User? user;
   final String? message;
   final String? userId;
-  final bool? isOTPResended;
+  final bool? isOTPResend;
 
   static AuthState initial() => const AuthState(
         accountStatus: AccountStatus.initial,
-        isOTPResended: false,
+        isOTPResend: false,
       );
 
-  AuthState copyWith(
-      {AccountStatus? accountStatus,
-      User? user,
-      String? message,
-      String? userId,
-      bool? isOTPResended}) {
+  AuthState copyWith({
+    AccountStatus? accountStatus,
+    User? user,
+    String? message,
+    String? userId,
+    bool? isOTPResend,
+  }) {
     return AuthState(
-        accountStatus: accountStatus ?? this.accountStatus,
-        user: user ?? this.user,
-        message: message ?? this.message,
-        userId: userId ?? this.userId,
-        isOTPResended: isOTPResended ?? this.isOTPResended);
+      accountStatus: accountStatus ?? this.accountStatus,
+      user: user ?? this.user,
+      message: message ?? this.message,
+      userId: userId ?? this.userId,
+      isOTPResend: isOTPResend ?? this.isOTPResend,
+    );
   }
 
   @override
-  List<Object> get props =>
-      [accountStatus!, user!, message!, userId!, isOTPResended!];
+  List<Object?> get props => [
+        accountStatus,
+        user,
+        message,
+        userId,
+        isOTPResend,
+      ];
 }

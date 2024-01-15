@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/repositories/auth_repository.dart';
@@ -20,7 +19,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
   late TextEditingController pinController;
   int start = 30;
   bool wait = false;
-  var buttonName = "Send";
+  String buttonName = 'Send';
   @override
   void initState() {
     phoneController = TextEditingController();
@@ -37,7 +36,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
 
   void startTimer() {
     const onsec = Duration(seconds: 1);
-    Timer timer = Timer.periodic(onsec, (timer) {
+    final timer = Timer.periodic(onsec, (timer) {
       if (start == 0) {
         setState(() {
           wait = false;
@@ -113,12 +112,6 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                           horizontal: 15,
                         ),
                         child: InkWell(
-                          child: Text(
-                            buttonName,
-                            style: TextStyle(
-                              color: wait ? Colors.grey : Colors.blue,
-                            ),
-                          ),
                           onTap: wait
                               ? null
                               : () async {
@@ -131,6 +124,12 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                                   //TODO: Code for sending OTP
                                   try {} catch (e) {}
                                 },
+                          child: Text(
+                            buttonName,
+                            style: TextStyle(
+                              color: wait ? Colors.grey : Colors.blue,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -146,7 +145,8 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                   Text(
                     'Resend in ',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: context.colorScheme.onPrimaryContainer),
+                          color: context.colorScheme.onPrimaryContainer,
+                        ),
                   ),
                   Text(
                     '00: $start',
@@ -158,12 +158,13 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                   Text(
                     ' second',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: context.colorScheme.onPrimaryContainer),
+                          color: context.colorScheme.onPrimaryContainer,
+                        ),
                   ),
                 ],
               ),
             verticalMargin12,
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
@@ -204,7 +205,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
             AuthButton(
               onTap: () {
                 print(pinController.text);
-                AuthRepository().validateOTP('65a520c8a4a226c846cb', '737624');
+                AuthRepository().validateOTP('65a534d2a6273f5c47e1', '598681');
                 //TODO: OTP verification code
               },
               label: 'Lets Go',

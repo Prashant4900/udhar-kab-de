@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/constants/tags.dart';
 import 'package:mobile/gen/assets.gen.dart';
-import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/clippers/login_clipper.dart';
 import 'package:mobile/utils/extensions.dart';
+import 'package:mobile/views/auth/bloc/auth_bloc.dart';
 
 class MyLoginScreen extends StatelessWidget {
   const MyLoginScreen({super.key});
@@ -15,112 +16,134 @@ class MyLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SizedBox.expand(
-          child: Column(
-            children: [
-              ClipPath(
-                clipper: WaveClipperTwo(),
-                child: Container(
-                  height: MediaQuery.sizeOf(context).height * 0.3,
-                  width: double.infinity,
-                  color: context.colorScheme.primary,
-                  child: Padding(
-                    padding: horizontalPadding16,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Hero(
-                          tag: HeroTags.fullTextLogo,
-                          child: Text(
-                            'Udhar Kab Dega',
-                            style: context.textTheme.headlineLarge!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state.accountStatus == AccountStatus.accountVerified) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              MyRoutes.dashboard,
+              (route) => false,
+            );
+          }
+          if (state.accountStatus == AccountStatus.failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Something went wrong!. ${state.message}'),
+              ),
+            );
+          }
+        },
+        builder: (BuildContext context, AuthState state) {
+          return SizedBox.expand(
+            child: Column(
+              children: [
+                ClipPath(
+                  clipper: WaveClipperTwo(),
+                  child: Container(
+                    height: MediaQuery.sizeOf(context).height * 0.4,
+                    width: double.infinity,
+                    color: context.colorScheme.primary,
+                    child: Padding(
+                      padding: horizontalPadding16,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Spacer(flex: 2),
+                          Hero(
+                            tag: HeroTags.fullTextLogo,
+                            child: Text(
+                              'Udhar Kab Dega',
+                              style: context.textTheme.headlineLarge!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        Text(
-                          'मेरा पैसा मुझे वापस दे!!!',
-                          style: context.textTheme.bodySmall
-                              ?.copyWith(color: Colors.white)
-                              .copyWith(fontStyle: FontStyle.italic),
-                        ),
-                      ],
+                          Text(
+                            'मेरा पैसा मुझे वापस दे!!!',
+                            style: context.textTheme.bodySmall
+                                ?.copyWith(color: Colors.white)
+                                .copyWith(fontStyle: FontStyle.italic),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const Spacer(flex: 4),
-              Padding(
-                padding: horizontalPadding16,
-                child: AuthButton(
-                  icon: Icon(
-                    Icons.phone,
-                    color: context.colorScheme.onPrimary,
+                const Spacer(flex: 5),
+                Padding(
+                  padding: horizontalPadding16,
+                  child: AuthButton(
+                    icon: Icon(
+                      Icons.phone,
+                      color: context.colorScheme.onPrimary,
+                    ),
+                    label: 'Continue with phone',
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        MyRoutes.phoneAuthScreen,
+                      );
+                    },
                   ),
-                  label: 'Continue with phone',
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      MyRoutes.phoneAuthScreen,
-                    );
-                  },
                 ),
-              ),
-              verticalMargin16,
-              Padding(
-                padding: horizontalPadding16,
-                child: AuthButton(
-                  label: 'Sign in With Google',
-                  icon: Assets.svg.googleIcon.svg(
-                    width: kToolbarHeight / 2.2,
-                  ),
-                  backgroundColor: Colors.black,
-                  onTap: () async {
-                    try {
-                      await AuthRepository().signInWithGoogle();
-                    } catch (e) {
-                      log('object $e');
-                    }
-                  },
-                ),
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Terms',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                    child: VerticalDivider(
-                      color: Colors.black,
+                verticalMargin16,
+                if (state.accountStatus == AccountStatus.loading)
+                  const CircularProgressIndicator.adaptive()
+                else
+                  Padding(
+                    padding: horizontalPadding16,
+                    child: AuthButton(
+                      label: 'Sign in With Google',
+                      icon: Assets.svg.googleIcon.svg(
+                        width: kToolbarHeight / 2.2,
+                      ),
+                      backgroundColor: Colors.black,
+                      onTap: () async {
+                        try {
+                          context.read<AuthBloc>().add(SignInWithGoogleEvent());
+                        } catch (e) {
+                          log('object $e');
+                        }
+                      },
                     ),
                   ),
-                  Text(
-                    'Privacy Policy',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                    child: VerticalDivider(
-                      color: Colors.black,
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Terms',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                  ),
-                  Text(
-                    'Contact Us',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-              verticalMargin16,
-            ],
-          ),
-        ),
+                    const SizedBox(
+                      height: 15,
+                      child: VerticalDivider(
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'Privacy Policy',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                      child: VerticalDivider(
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'Contact Us',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+                verticalMargin48,
+              ],
+            ),
+          );
+        },
       ),
     );
   }

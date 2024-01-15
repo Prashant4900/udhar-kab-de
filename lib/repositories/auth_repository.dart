@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:mobile/service/app_client.dart';
+import 'package:mobile/utilities/share_pref/app_prefs.dart';
 
 class AuthRepository {
   final _account = AppWriteClient.account;
@@ -10,15 +11,10 @@ class AuthRepository {
 
   Future<User> signInWithGoogle() async {
     try {
-      final session =
-          await _account.createOAuth2Session(provider: 'google').then((value) {
-        print('value: $value');
-      });
-      log('session: $session');
-      // final data = await _account.updateSession(sessionId: 'current');
-      // print('data: $data');
+      await _account.createOAuth2Session(provider: 'google');
       final user = await _account.get();
-      // await insertUser(user);
+      log('username: ${user.name}, email: ${user.email}, id: ${user.$id}');
+      await AppPrefHelper.setUserID(user.$id);
       return user;
     } catch (e) {
       throw Exception(e);
@@ -45,25 +41,27 @@ class AuthRepository {
         secret: otp,
       );
       log('session: ${session.countryName}');
+      await insertUser('user');
+
       return session.userId;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<bool> insertUser(User user) async {
+  Future<bool> insertUser(String atr) async {
     try {
       final result = await _database.createDocument(
         databaseId: '65a43508726d50a4e9ea',
         collectionId: '65a43518a7b432418732',
         documentId: ID.unique(),
         data: {
-          'email': user.email,
-          'name': user.name,
-          'phone': user.phone,
-          'user-id': user.$id,
-          'create-at': user.$createdAt,
-          'update-at': user.$updatedAt,
+          'email': atr,
+          // 'name': user.name,
+          // 'phone': user.phone,
+          // 'user-id': user.$id,
+          // 'create-at': user.$createdAt,
+          // 'update-at': user.$updatedAt,
         },
       );
       if (result.$collectionId != '') {
@@ -78,6 +76,7 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       await _account.deleteSession(sessionId: 'current');
+      await AppPrefHelper.deleteUserID();
     } catch (e) {
       throw Exception(e);
     }

@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignOutEvent>(_signOut);
     on<PhoneAuthInitiateEvent>(_phoneAuthInitiate);
     on<ValidateOTPEvent>(_validateOTP);
+    on<UserStatusEvent>(_userState);
   }
 
   final authRepository = getIt<AuthRepository>();
@@ -26,8 +27,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(accountStatus: AccountStatus.loading));
     try {
       final user = await authRepository.signInWithGoogle();
-      emit(state.copyWith(
-          accountStatus: AccountStatus.accountVerified, user: user));
+      emit(
+        state.copyWith(
+          accountStatus: AccountStatus.accountVerified,
+          user: user,
+        ),
+      );
     } catch (e) {
       final message = e.toString();
       emit(
@@ -48,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await authRepository.signOut();
       emit(
-        state.copyWith(accountStatus: AccountStatus.accountLogedOut),
+        state.copyWith(accountStatus: AccountStatus.accountLoggedOut),
       );
     } catch (e) {
       final message = e.toString();
@@ -65,9 +70,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     PhoneAuthInitiateEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      accountStatus: AccountStatus.loading,
-    ));
+    emit(
+      state.copyWith(
+        accountStatus: AccountStatus.loading,
+      ),
+    );
 
     try {
       final userId = await authRepository.initiatePhoneAuth(event.number);
@@ -79,8 +86,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
       } else {
-        emit(state.copyWith(
-            accountStatus: AccountStatus.accountCreated, userId: userId));
+        emit(
+          state.copyWith(
+            accountStatus: AccountStatus.accountCreated,
+            userId: userId,
+          ),
+        );
       }
     } catch (e) {
       final message = e.toString();
@@ -102,10 +113,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userId = await authRepository.validateOTP(state.userId!, event.otp);
       if (userId == state.userId) {
         //Here userId is of validateOTP and state.userId is of Phone number sending
-        emit(state.copyWith(
-          accountStatus: AccountStatus.accountVerified,
-          userId: userId,
-        ));
+        emit(
+          state.copyWith(
+            accountStatus: AccountStatus.accountVerified,
+            userId: userId,
+          ),
+        );
       } else {
         emit(
           state.copyWith(
@@ -116,10 +129,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       final message = e.toString();
-      emit(state.copyWith(
-          accountStatus: AccountStatus.failure, message: message));
+      emit(
+        state.copyWith(
+          accountStatus: AccountStatus.failure,
+          message: message,
+        ),
+      );
     }
   }
+
+  FutureOr<void> _userState(
+    UserStatusEvent event,
+    Emitter<AuthState> emit,
+  ) async {}
 }
 
 //ui -> event ->  bloc -> state -> UI
