@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/routes/route_manager.dart';
+import 'package:mobile/utilities/share_pref/app_prefs.dart';
 import 'package:mobile/utils/clippers/add_details_clipper.dart';
 import 'package:mobile/utils/extensions.dart';
 
@@ -26,15 +27,14 @@ class _MyAddDetailsScreenState extends State<MyAddDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: InkWell(
-        onTap: () {
-          try {
+        onTap: () async {
+          await AppPrefHelper.setUserSkipDetails(skip: true).then((value) {
             Navigator.pushNamedAndRemoveUntil(
               context,
               MyRoutes.dashboard,
               (route) => false,
             );
-            // ignore: empty_catches
-          } catch (e) {}
+          });
         },
         child: Container(
           height: 40,

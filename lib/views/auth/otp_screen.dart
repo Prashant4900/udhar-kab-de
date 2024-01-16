@@ -22,24 +22,30 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
   late TextEditingController pinController;
   int start = 60;
   bool resendOtp = false;
+  late Timer timer;
 
   @override
   void initState() {
     pinController = TextEditingController();
-    startResetTimer();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    startResetTimer();
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     pinController.dispose();
+    timer.cancel();
     super.dispose();
-    startResetTimer();
   }
 
   void startResetTimer() {
     const oneSec = Duration(seconds: 1);
-    Timer.periodic(oneSec, (Timer t) {
+    timer = Timer.periodic(oneSec, (Timer t) {
       if (start == 0) {
         setState(() {
           resendOtp = true;
