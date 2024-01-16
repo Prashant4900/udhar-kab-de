@@ -77,7 +77,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     try {
-      final userId = await authRepository.initiatePhoneAuth(event.number);
+      final userId =
+          await authRepository.initiatePhoneAuth('+91${event.number}');
       if (userId == '') {
         emit(
           state.copyWith(

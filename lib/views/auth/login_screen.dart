@@ -40,7 +40,7 @@ class MyLoginScreen extends StatelessWidget {
                 ClipPath(
                   clipper: WaveClipperTwo(),
                   child: Container(
-                    height: MediaQuery.sizeOf(context).height * 0.4,
+                    height: MediaQuery.sizeOf(context).height * 0.3,
                     width: double.infinity,
                     color: context.colorScheme.primary,
                     child: Padding(
@@ -71,7 +71,7 @@ class MyLoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Spacer(flex: 5),
+                const Spacer(flex: 6),
                 Padding(
                   padding: horizontalPadding16,
                   child: AuthButton(
@@ -151,14 +151,14 @@ class MyLoginScreen extends StatelessWidget {
 
 class AuthButton extends StatelessWidget {
   const AuthButton({
-    required this.onTap,
     required this.label,
+    this.onTap,
     this.icon,
     this.backgroundColor,
     super.key,
   });
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String label;
   final Widget? icon;
   final Color? backgroundColor;
@@ -172,7 +172,9 @@ class AuthButton extends StatelessWidget {
         height: kToolbarHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: backgroundColor ?? context.colorScheme.primary,
+          color: onTap == null
+              ? Colors.grey
+              : backgroundColor ?? context.colorScheme.primary,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
