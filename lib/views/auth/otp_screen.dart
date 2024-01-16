@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
@@ -18,10 +20,13 @@ class MyOTPScreen extends StatefulWidget {
 
 class _MyOTPScreenState extends State<MyOTPScreen> {
   late TextEditingController pinController;
+  int start = 60;
+  bool resendOtp = false;
 
   @override
   void initState() {
     pinController = TextEditingController();
+    startResetTimer();
     super.initState();
   }
 
@@ -29,6 +34,22 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
   void dispose() {
     pinController.dispose();
     super.dispose();
+    startResetTimer();
+  }
+
+  void startResetTimer() {
+    const oneSec = Duration(seconds: 1);
+    Timer.periodic(oneSec, (Timer t) {
+      if (start == 0) {
+        setState(() {
+          resendOtp = true;
+        });
+      } else {
+        setState(() {
+          start--;
+        });
+      }
+    });
   }
 
   @override
@@ -50,6 +71,13 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
             context,
             MyRoutes.addDetailsScreen,
             (route) => false,
+          );
+        }
+        if (state.accountStatus == AccountStatus.accountCreated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('OTP sent again!'),
+            ),
           );
         }
         if (state.accountStatus == AccountStatus.failure) {
@@ -80,7 +108,7 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
                 ),
                 verticalMargin12,
                 Text(
-                  '''We sent the OTP to +91 ${widget.number}, Now please enter OTP to proceed.''',
+                  '''We have sent the OTP to +91 ${widget.number}, Now please enter OTP to proceed.''',
                   style: context.textTheme.bodyMedium,
                 ),
                 verticalMargin24,
@@ -98,17 +126,33 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
                   ),
                 ),
                 verticalMargin8,
-                Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Resend OTP  01:30 sec',
-                      style: context.textTheme.bodyMedium!.copyWith(
-                        color: context.colorScheme.primary,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (resendOtp)
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            start = 60;
+                            resendOtp = false;
+                          });
+                          context.read<AuthBloc>().add(
+                                PhoneAuthInitiateEvent(number: widget.number),
+                              );
+                        },
+                        child: const Text(
+                          'Resend OTP',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      )
+                    else
+                      Text(
+                        'Resend OTP in $start second',
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: context.colorScheme.primary,
+                        ),
                       ),
-                    ),
-                  ),
+                  ],
                 ),
                 const Spacer(),
                 AuthButton(
