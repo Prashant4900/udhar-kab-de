@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/repositories/auth_repository.dart';
+import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/auth/login_screen.dart';
 import 'package:pinput/pinput.dart';
@@ -204,11 +205,13 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
             const Spacer(),
             AuthButton(
               onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, MyRoutes.addDetailsScreen, (route) => false);
                 print(pinController.text);
-                AuthRepository().validateOTP('65a534d2a6273f5c47e1', '598681');
+                // AuthRepository().validateOTP('65a534d2a6273f5c47e1', '598681');
                 //TODO: OTP verification code
               },
-              label: 'Lets Go',
+              label: 'Continue',
             ),
           ],
         ),

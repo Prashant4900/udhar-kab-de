@@ -6,4 +6,5 @@ class MyRoutes {
   static const authScreen = '/auth';
   static const phoneAuthScreen = '/phoneAuth';
   static const addFriendScreen = '/add-friend';
+  static const addDetailsScreen = '/add-details';
 }
