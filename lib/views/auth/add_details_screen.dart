@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
+import 'package:mobile/routes/route_manager.dart';
+import 'package:mobile/utilities/share_pref/app_prefs.dart';
 import 'package:mobile/utils/clippers/add_details_clipper.dart';
 import 'package:mobile/utils/extensions.dart';
 
@@ -24,30 +26,46 @@ class _MyAddDetailsScreenState extends State<MyAddDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        height: 40,
-        width: 100,
-        decoration: BoxDecoration(
-          border: Border.all(color: context.colorScheme.inversePrimary),
-          color: context.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Center(
-          child: Text(
-            'Lets Go',
-            style: TextStyle(color: context.colorScheme.inversePrimary),
+      floatingActionButton: InkWell(
+        onTap: () async {
+          await AppPrefHelper.setUserSkipDetails(skip: true).then((value) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              MyRoutes.dashboard,
+              (route) => false,
+            );
+          });
+        },
+        child: Container(
+          height: 40,
+          width: 100,
+          decoration: BoxDecoration(
+            border: Border.all(color: context.colorScheme.inversePrimary),
+            color: context.colorScheme.onPrimaryContainer,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Text(
+              'Lets Go',
+              style: TextStyle(color: context.colorScheme.inversePrimary),
+            ),
           ),
         ),
       ),
       backgroundColor: context.colorScheme.onPrimaryContainer,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'skip',
-              style: TextStyle(color: Colors.grey),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, MyRoutes.dashboard);
+              },
+              child: const Text(
+                'skip',
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
           ),
         ],
@@ -97,8 +115,10 @@ class _MyAddDetailsScreenState extends State<MyAddDetailsScreen> {
 class UserDetailsWidget extends StatelessWidget {
   // ignore: lines_longer_than_80_chars
   const UserDetailsWidget({
-    required this.fullNameController, required this.hintText, 
-    required this.icon, super.key,
+    required this.fullNameController,
+    required this.hintText,
+    required this.icon,
+    super.key,
   });
 
   final TextEditingController fullNameController;

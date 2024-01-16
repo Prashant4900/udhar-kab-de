@@ -9,6 +9,14 @@ class AppPrefHelper {
     return AppPref.get(AppPrefKey.userID, '') as String;
   }
 
+  static Future<bool> setUserSkipDetails({required bool skip}) async {
+    return AppPref.save(AppPrefKey.skipAddUserDetails, skip);
+  }
+
+  static bool getUserSkipDetails() {
+    return AppPref.get(AppPrefKey.skipAddUserDetails, false) as bool;
+  }
+
   static Future<bool> deleteUserID() {
     return AppPref.remove(AppPrefKey.userID);
   }

@@ -33,6 +33,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.accountStatus == AccountStatus.accountCreated) {
+          print('--------------');
           Navigator.pushNamed(
             context,
             MyRoutes.otpScreen,

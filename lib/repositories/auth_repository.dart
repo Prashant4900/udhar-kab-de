@@ -9,15 +9,36 @@ class AuthRepository {
   final _account = AppWriteClient.account;
   final _database = AppWriteClient.database;
 
+  Future<User> getCurrentSessionUser() async {
+    try {
+      final user = await _account.get();
+      await Future<void>.delayed(const Duration(microseconds: 500));
+      return user;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<User> signInWithGoogle() async {
     try {
       await _account.createOAuth2Session(provider: 'google');
       await Future<void>.delayed(const Duration(microseconds: 500));
 
-      final user = await _account.get();
+      final user = await getCurrentSessionUser();
       log('username: ${user.name}, email: ${user.email}, id: ${user.$id}');
+      await insertOrUpdateUser(user);
       await AppPrefHelper.setUserID(user.$id);
       return user;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> getUserPref(AppPrefKey key) async {
+    try {
+      final result = await _account.getPrefs();
+      log('result: ${result.data}');
+      return false;
     } catch (e) {
       throw Exception(e);
     }
@@ -42,30 +63,72 @@ class AuthRepository {
         userId: userId,
         secret: otp,
       );
-      log('session: ${session.countryName}');
-      // await insertUser('user');
-
+      log('session: ${session.userId}');
+      final user = await getCurrentSessionUser();
+      await insertOrUpdateUser(user);
+      await AppPrefHelper.setUserID(user.$id);
       return session.userId;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<bool> insertUser(String atr) async {
+  Future<bool> insertOrUpdateUser(User user) async {
     try {
-      final result = await _database.createDocument(
+      Document result;
+
+      final documents = await _database.listDocuments(
         databaseId: '65a43508726d50a4e9ea',
         collectionId: '65a43518a7b432418732',
-        documentId: ID.unique(),
-        data: {
-          'email': atr,
-          // 'name': user.name,
-          // 'phone': user.phone,
-          // 'user-id': user.$id,
-          // 'create-at': user.$createdAt,
-          // 'update-at': user.$updatedAt,
-        },
+        queries: [
+          Query.equal('userId', user.$id),
+        ],
       );
+
+      if (documents.total > 0) {
+        final documentID = documents.documents.first.$id;
+
+        result = await _database.updateDocument(
+          databaseId: '65a43508726d50a4e9ea',
+          collectionId: '65a43518a7b432418732',
+          documentId: documentID,
+          data: {
+            'userId': user.$id,
+            'name': user.name.isEmpty ? null : user.name,
+            'phone': user.phone.isEmpty ? null : user.phone,
+            'phoneVerification': user.phoneVerification,
+            'email': user.email.isEmpty ? null : user.email,
+            'emailVerification': user.emailVerification,
+            'status': user.status,
+            'updateAt': user.$updatedAt,
+            'createAt': user.$createdAt,
+            'registrationDate': user.registration,
+            'accessedAt': user.accessedAt,
+            'passwordUpdate': user.passwordUpdate,
+          },
+        );
+      } else {
+        result = await _database.createDocument(
+          databaseId: '65a43508726d50a4e9ea',
+          collectionId: '65a43518a7b432418732',
+          documentId: ID.unique(),
+          data: {
+            'userId': user.$id,
+            'name': user.name.isEmpty ? null : user.name,
+            'phone': user.phone.isEmpty ? null : user.phone,
+            'phoneVerification': user.phoneVerification,
+            'email': user.email.isEmpty ? null : user.email,
+            'emailVerification': user.emailVerification,
+            'status': user.status,
+            'updateAt': user.$updatedAt,
+            'createAt': user.$createdAt,
+            'registrationDate': user.registration,
+            'accessedAt': user.accessedAt,
+            'passwordUpdate': user.passwordUpdate,
+          },
+        );
+      }
+
       if (result.$collectionId != '') {
         return true;
       }

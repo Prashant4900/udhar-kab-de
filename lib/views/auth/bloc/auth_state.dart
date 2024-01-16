@@ -9,6 +9,8 @@ enum AccountStatus {
   failure
 }
 
+enum UserStatus { loading, loggedIn, loggedOut }
+
 class AuthState extends Equatable {
   const AuthState({
     this.user,
@@ -16,9 +18,11 @@ class AuthState extends Equatable {
     this.userId,
     this.isOTPResend,
     this.accountStatus,
+    this.userStatus,
   });
 
   final AccountStatus? accountStatus;
+  final UserStatus? userStatus;
   final User? user;
   final String? message;
   final String? userId;
@@ -35,6 +39,7 @@ class AuthState extends Equatable {
     String? message,
     String? userId,
     bool? isOTPResend,
+    UserStatus? userStatus,
   }) {
     return AuthState(
       accountStatus: accountStatus ?? this.accountStatus,
@@ -42,6 +47,7 @@ class AuthState extends Equatable {
       message: message ?? this.message,
       userId: userId ?? this.userId,
       isOTPResend: isOTPResend ?? this.isOTPResend,
+      userStatus: userStatus ?? this.userStatus,
     );
   }
 
@@ -52,5 +58,6 @@ class AuthState extends Equatable {
         message,
         userId,
         isOTPResend,
+        userStatus,
       ];
 }

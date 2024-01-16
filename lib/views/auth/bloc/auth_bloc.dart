@@ -113,7 +113,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final userId = await authRepository.validateOTP(state.userId!, event.otp);
       if (userId == state.userId) {
-        //Here userId is of validateOTP and state.userId is of Phone number sending
+        /// Here userId is of validateOTP and state.userId
+        /// is of Phone number sending
         emit(
           state.copyWith(
             accountStatus: AccountStatus.accountVerified,
@@ -142,7 +143,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _userState(
     UserStatusEvent event,
     Emitter<AuthState> emit,
-  ) async {}
+  ) async {
+    emit(state.copyWith(userStatus: UserStatus.loading));
+    try {
+      final user = await authRepository.getCurrentSessionUser();
+      emit(state.copyWith(userStatus: UserStatus.loggedIn, user: user));
+    } catch (e) {
+      emit(state.copyWith(userStatus: UserStatus.loggedOut));
+    }
+  }
 }
 
 //ui -> event ->  bloc -> state -> UI
