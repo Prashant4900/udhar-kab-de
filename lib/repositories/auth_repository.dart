@@ -12,6 +12,8 @@ class AuthRepository {
   Future<User> signInWithGoogle() async {
     try {
       await _account.createOAuth2Session(provider: 'google');
+      await Future<void>.delayed(const Duration(microseconds: 500));
+
       final user = await _account.get();
       log('username: ${user.name}, email: ${user.email}, id: ${user.$id}');
       await AppPrefHelper.setUserID(user.$id);
@@ -41,7 +43,7 @@ class AuthRepository {
         secret: otp,
       );
       log('session: ${session.countryName}');
-      await insertUser('user');
+      // await insertUser('user');
 
       return session.userId;
     } catch (e) {

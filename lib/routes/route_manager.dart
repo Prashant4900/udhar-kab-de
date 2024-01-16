@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/views/auth/add_details_screen.dart';
 import 'package:mobile/views/auth/login_screen.dart';
+import 'package:mobile/views/auth/otp_screen.dart';
 import 'package:mobile/views/auth/phone_auth_screen.dart';
 import 'package:mobile/views/dashboard/dashboard.dart';
 import 'package:mobile/views/friends/add_friend_screen.dart';
 import 'package:mobile/views/splash/splash_screen.dart';
 
+part 'models.dart';
 part 'route_names.dart';
 
 class RouteManager {
@@ -21,6 +24,16 @@ class RouteManager {
       case MyRoutes.phoneAuthScreen:
         return MaterialPageRoute(
           builder: (_) => const MyPhoneAuthScreen(),
+        );
+      case MyRoutes.addDetailsScreen:
+        return MaterialPageRoute(builder: (_) => const MyAddDetailsScreen());
+      case MyRoutes.otpScreen:
+        final args = settings.arguments! as OTPScreenRouteArgs;
+
+        return MaterialPageRoute(
+          builder: (_) => MyOTPScreen(
+            number: args.number,
+          ),
         );
       case MyRoutes.addFriendScreen:
         return PageRouteBuilder<dynamic>(
