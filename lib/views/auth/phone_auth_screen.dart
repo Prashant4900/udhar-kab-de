@@ -33,7 +33,11 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.accountStatus == AccountStatus.accountCreated) {
-          Navigator.pushNamed(context, MyRoutes.otpScreen);
+          Navigator.pushNamed(
+            context,
+            MyRoutes.otpScreen,
+            arguments: OTPScreenRouteArgs(number: phoneController.text),
+          );
         }
         if (state.accountStatus == AccountStatus.failure) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -102,7 +106,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                 ),
                 const Spacer(),
                 if (state.accountStatus == AccountStatus.loading)
-                  const CircularProgressIndicator.adaptive()
+                  const Center(child: CircularProgressIndicator.adaptive())
                 else
                   AuthButton(
                     onTap: phoneController.text.length != 10

@@ -8,7 +8,9 @@ import 'package:mobile/views/auth/login_screen.dart';
 import 'package:pinput/pinput.dart';
 
 class MyOTPScreen extends StatefulWidget {
-  const MyOTPScreen({super.key});
+  const MyOTPScreen({required this.number, super.key});
+
+  final String number;
 
   @override
   State<MyOTPScreen> createState() => _MyOTPScreenState();
@@ -78,7 +80,7 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
                 ),
                 verticalMargin12,
                 Text(
-                  '''We sent the OTP to +91 8982108404, Now please enter OTP to proceed.''',
+                  '''We sent the OTP to +91 ${widget.number}, Now please enter OTP to proceed.''',
                   style: context.textTheme.bodyMedium,
                 ),
                 verticalMargin24,

@@ -7,6 +7,7 @@ import 'package:mobile/views/dashboard/dashboard.dart';
 import 'package:mobile/views/friends/add_friend_screen.dart';
 import 'package:mobile/views/splash/splash_screen.dart';
 
+part 'models.dart';
 part 'route_names.dart';
 
 class RouteManager {
@@ -27,8 +28,12 @@ class RouteManager {
       case MyRoutes.addDetailsScreen:
         return MaterialPageRoute(builder: (_) => const MyAddDetailsScreen());
       case MyRoutes.otpScreen:
+        final args = settings.arguments! as OTPScreenRouteArgs;
+
         return MaterialPageRoute(
-          builder: (_) => const MyOTPScreen(),
+          builder: (_) => MyOTPScreen(
+            number: args.number,
+          ),
         );
       case MyRoutes.addFriendScreen:
         return PageRouteBuilder<dynamic>(
