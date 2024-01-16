@@ -79,7 +79,7 @@ class MyLoginScreen extends StatelessWidget {
                       Icons.phone,
                       color: context.colorScheme.onPrimary,
                     ),
-                    label: 'Continue with phone',
+                    label: 'Continue with Phone',
                     onTap: () {
                       Navigator.pushNamed(
                         context,

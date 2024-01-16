@@ -48,7 +48,7 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
         if (state.accountStatus == AccountStatus.accountVerified) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            MyRoutes.dashboard,
+            MyRoutes.addDetailsScreen,
             (route) => false,
           );
         }
