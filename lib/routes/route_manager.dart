@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/views/account/account_screen.dart';
 import 'package:mobile/views/auth/add_details_screen.dart';
 import 'package:mobile/views/auth/login_screen.dart';
 import 'package:mobile/views/auth/otp_screen.dart';
@@ -27,6 +28,16 @@ class RouteManager {
         );
       case MyRoutes.addDetailsScreen:
         return MaterialPageRoute(builder: (_) => const MyAddDetailsScreen());
+      case MyRoutes.otpScreen:
+        final args = settings.arguments! as OTPScreenRouteArgs;
+
+        return MaterialPageRoute(
+          builder: (_) => MyOTPScreen(
+            number: args.number,
+          ),
+        );
+        case MyRoutes.addAccountScreen:
+        return MaterialPageRoute(builder: (_) => const MyAccountScreen());
       case MyRoutes.otpScreen:
         final args = settings.arguments! as OTPScreenRouteArgs;
 

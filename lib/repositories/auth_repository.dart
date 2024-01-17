@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:mobile/service/app_client.dart';
@@ -146,4 +145,6 @@ class AuthRepository {
       throw Exception(e);
     }
   }
+
+  
 }
