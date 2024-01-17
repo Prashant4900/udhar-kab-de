@@ -21,9 +21,8 @@ class AuthState extends Equatable {
     this.userStatus,
   });
 
-  factory AuthState.initial() => const AuthState(
-        accountStatus: AccountStatus.initial,
-      );
+  factory AuthState.initial() =>
+      const AuthState(accountStatus: AccountStatus.initial);
 
   final AccountStatus? accountStatus;
   final UserStatus? userStatus;

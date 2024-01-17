@@ -12,7 +12,6 @@ class MySplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      bloc: context.read<AuthBloc>()..add(UserStatusEvent()),
       listener: (context, state) {
         final userID = AppPrefHelper.getUserID();
         if (state.userStatus == UserStatus.loggedOut && userID == '') {

@@ -6,7 +6,7 @@ import 'package:mobile/constants/commons.dart';
 import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/auth/bloc/auth_bloc.dart';
-import 'package:mobile/views/auth/login_screen.dart';
+import 'package:mobile/widget/button_widget.dart';
 import 'package:pinput/pinput.dart';
 
 class MyOTPScreen extends StatefulWidget {
