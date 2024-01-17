@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:mobile/service/app_client.dart';
@@ -33,11 +34,23 @@ class AuthRepository {
     }
   }
 
-  Future<bool> getUserPref(AppPrefKey key) async {
+  Future<dynamic> getUserPref(AppPrefKey key) async {
     try {
       final result = await _account.getPrefs();
-      log('result: ${result.data}');
-      return false;
+      log('result: ${result.data['afs']}');
+      final value = result.data[key.name];
+      if (value != null) {
+        return value;
+      }
+      throw Exception('Value not found!');
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> setUserPref(Map<dynamic, dynamic> prefs) async {
+    try {
+      await _account.updatePrefs(prefs: prefs);
     } catch (e) {
       throw Exception(e);
     }
@@ -145,6 +158,4 @@ class AuthRepository {
       throw Exception(e);
     }
   }
-
-  
 }

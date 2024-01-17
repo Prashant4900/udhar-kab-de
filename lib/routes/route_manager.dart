@@ -36,16 +36,9 @@ class RouteManager {
             number: args.number,
           ),
         );
-        case MyRoutes.addAccountScreen:
+      case MyRoutes.addAccountScreen:
         return MaterialPageRoute(builder: (_) => const MyAccountScreen());
-      case MyRoutes.otpScreen:
-        final args = settings.arguments! as OTPScreenRouteArgs;
 
-        return MaterialPageRoute(
-          builder: (_) => MyOTPScreen(
-            number: args.number,
-          ),
-        );
       case MyRoutes.addFriendScreen:
         return PageRouteBuilder<dynamic>(
           pageBuilder: (context, animation, secondaryAnimation) =>

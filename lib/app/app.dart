@@ -51,8 +51,7 @@ class _MyAppState extends State<MyApp> {
           textTheme: GoogleFonts.poppinsTextTheme(),
           useMaterial3: true,
         ),
-        //initialRoute: MyRoutes.splashScreen,
-        initialRoute: MyRoutes.addAccountScreen,
+        initialRoute: MyRoutes.splashScreen,
         onGenerateRoute: RouteManager.generateRoute,
       ),
     );

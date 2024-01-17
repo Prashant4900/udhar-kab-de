@@ -10,12 +10,16 @@ sealed class AuthEvent extends Equatable {
 final class SignInWithGoogleEvent extends AuthEvent {}
 
 final class PhoneAuthInitiateEvent extends AuthEvent {
-  const PhoneAuthInitiateEvent({required this.number});
+  const PhoneAuthInitiateEvent({
+    required this.number,
+    this.isOtpResend = false,
+  });
 
   final String number;
+  final bool isOtpResend;
 
   @override
-  List<Object> get props => [super.props, number];
+  List<Object> get props => [super.props, number, isOtpResend];
 }
 
 final class ValidateOTPEvent extends AuthEvent {

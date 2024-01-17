@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/utils/extensions.dart';
 
-class MyGroupScreen extends StatelessWidget {
-  const MyGroupScreen({super.key});
+class MyHomeScreen extends StatelessWidget {
+  const MyHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

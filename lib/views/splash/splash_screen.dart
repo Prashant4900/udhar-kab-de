@@ -15,8 +15,7 @@ class MySplashScreen extends StatelessWidget {
       bloc: context.read<AuthBloc>()..add(UserStatusEvent()),
       listener: (context, state) {
         final userID = AppPrefHelper.getUserID();
-
-        if (state.userStatus == UserStatus.loggedOut && userID != '') {
+        if (state.userStatus == UserStatus.loggedOut && userID == '') {
           Navigator.pushNamedAndRemoveUntil(
             context,
             MyRoutes.authScreen,

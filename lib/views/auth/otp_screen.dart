@@ -131,46 +131,57 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
                     ),
                   ),
                 ),
-                verticalMargin8,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (resendOtp)
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            start = 60;
-                            resendOtp = false;
-                          });
-                          context.read<AuthBloc>().add(
-                                PhoneAuthInitiateEvent(number: widget.number),
-                              );
-                        },
-                        child: const Text(
-                          'Resend OTP',
-                          style: TextStyle(color: Colors.blue),
+                      Padding(
+                        padding: topPadding8,
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              start = 60;
+                              resendOtp = false;
+                            });
+                            context.read<AuthBloc>().add(
+                                  PhoneAuthInitiateEvent(
+                                    number: widget.number,
+                                    isOtpResend: true,
+                                  ),
+                                );
+                          },
+                          child: const Text(
+                            'Resend OTP',
+                            style: TextStyle(color: Colors.blue),
+                          ),
                         ),
                       )
                     else
-                      Text(
-                        'Resend OTP in $start second',
-                        style: context.textTheme.bodySmall!.copyWith(
-                          color: context.colorScheme.primary,
+                      Padding(
+                        padding: topPadding24,
+                        child: Text(
+                          'Resend OTP in $start second',
+                          style: context.textTheme.bodyMedium!.copyWith(
+                            color: context.colorScheme.primary,
+                          ),
                         ),
                       ),
                   ],
                 ),
                 const Spacer(),
-                AuthButton(
-                  onTap: pinController.text.length != 6
-                      ? null
-                      : () {
-                          context.read<AuthBloc>().add(
-                                ValidateOTPEvent(otp: pinController.text),
-                              );
-                        },
-                  label: 'Verify',
-                ),
+                if (state.accountStatus == AccountStatus.loading)
+                  const Center(child: CircularProgressIndicator.adaptive())
+                else
+                  AuthButton(
+                    onTap: pinController.text.length != 6
+                        ? null
+                        : () {
+                            context.read<AuthBloc>().add(
+                                  ValidateOTPEvent(otp: pinController.text),
+                                );
+                          },
+                    label: 'Verify',
+                  ),
                 verticalMargin48,
               ],
             ),
