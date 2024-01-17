@@ -80,13 +80,19 @@ class MyAccountScreen extends StatelessWidget {
               verticalMargin12,
               const Divider(),
               verticalMargin12,
-              const FeatureTile(
+              FeatureTile(
                 title: 'HotSpot Area',
                 icon: Icons.store_mall_directory,
+                onTap: () {
+                  Navigator.pushNamed(context, MyRoutes.hotspotsScreen);
+                },
               ),
-              const FeatureTile(
+              FeatureTile(
                 title: 'Account',
                 icon: Icons.person,
+                onTap: () {
+                  Navigator.pushNamed(context, MyRoutes.accountDetail);
+                },
               ),
               verticalMargin12,
               Text(
