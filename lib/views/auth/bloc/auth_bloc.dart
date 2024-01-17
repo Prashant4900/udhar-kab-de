@@ -91,6 +91,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           state.copyWith(
             accountStatus: AccountStatus.accountCreated,
             userId: userId,
+            isOTPResend: event.isOtpResend,
           ),
         );
       }

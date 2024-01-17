@@ -60,7 +60,11 @@ class _MyAddDetailsScreenState extends State<MyAddDetailsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: InkWell(
               onTap: () {
-                Navigator.pushNamed(context, MyRoutes.dashboard);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  MyRoutes.dashboard,
+                  (route) => false,
+                );
               },
               child: const Text(
                 'skip',

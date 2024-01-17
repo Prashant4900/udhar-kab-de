@@ -4,7 +4,7 @@ import 'package:mobile/constants/commons.dart';
 import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/auth/bloc/auth_bloc.dart';
-import 'package:mobile/views/auth/login_screen.dart';
+import 'package:mobile/widget/button_widget.dart';
 
 class MyPhoneAuthScreen extends StatefulWidget {
   const MyPhoneAuthScreen({super.key});
@@ -32,8 +32,8 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.accountStatus == AccountStatus.accountCreated) {
-          print('--------------');
+        if (state.accountStatus == AccountStatus.accountCreated &&
+            !state.isOTPResend) {
           Navigator.pushNamed(
             context,
             MyRoutes.otpScreen,
@@ -92,14 +92,26 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                       controller: phoneController,
                       onChanged: (_) => setState(() {}),
                       decoration: InputDecoration(
-                        contentPadding: horizontalPadding16,
+                        contentPadding:
+                            horizontalPadding16 + topPadding16 + topPadding2,
                         border: InputBorder.none,
                         hintText: 'Enter Your Phone Number',
                         hintStyle: context.textTheme.titleMedium!.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
                         counter: emptyWidget,
-                        prefix: const Text('+91\t'),
+                        prefixIcon: Center(
+                          child: Text(
+                            '+91\t',
+                            style: context.textTheme.titleMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        prefixIconConstraints: const BoxConstraints(
+                          maxWidth: 50,
+                          minHeight: 30,
+                        ), // Adjust constraints as needed
                       ),
                       maxLength: 10,
                     ),

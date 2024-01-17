@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/views/account/account_screen.dart';
+import 'package:mobile/views/account/acount_detail_screen.dart';
 import 'package:mobile/views/auth/add_details_screen.dart';
 import 'package:mobile/views/auth/login_screen.dart';
 import 'package:mobile/views/auth/otp_screen.dart';
 import 'package:mobile/views/auth/phone_auth_screen.dart';
 import 'package:mobile/views/dashboard/dashboard.dart';
 import 'package:mobile/views/friends/add_friend_screen.dart';
+import 'package:mobile/views/hotspots/hotspots_screen.dart';
 import 'package:mobile/views/splash/splash_screen.dart';
 
 part 'models.dart';
@@ -21,6 +24,14 @@ class RouteManager {
         return MaterialPageRoute(
           builder: (_) => const MySplashScreen(),
         );
+      case MyRoutes.accountDetail:
+        return MaterialPageRoute(
+          builder: (_) => const MyAccountDetailScreen(),
+        );
+      case MyRoutes.hotspotsScreen:
+        return MaterialPageRoute(
+          builder: (_) => const MyHotSpotsScreen(),
+        );
       case MyRoutes.phoneAuthScreen:
         return MaterialPageRoute(
           builder: (_) => const MyPhoneAuthScreen(),
@@ -35,6 +46,9 @@ class RouteManager {
             number: args.number,
           ),
         );
+      case MyRoutes.addAccountScreen:
+        return MaterialPageRoute(builder: (_) => const MyAccountScreen());
+
       case MyRoutes.addFriendScreen:
         return PageRouteBuilder<dynamic>(
           pageBuilder: (context, animation, secondaryAnimation) =>

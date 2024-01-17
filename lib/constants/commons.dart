@@ -53,6 +53,7 @@ const allPadding32 = EdgeInsets.all(32);
 const allPadding48 = EdgeInsets.all(48);
 
 const topPadding4 = EdgeInsets.only(top: 4);
+const topPadding2 = EdgeInsets.only(top: 2);
 const topPadding8 = EdgeInsets.only(top: 8);
 const topPadding12 = EdgeInsets.only(top: 12);
 const topPadding16 = EdgeInsets.only(top: 16);

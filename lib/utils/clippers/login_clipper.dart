@@ -28,16 +28,16 @@ class WaveClipperTwo extends CustomClipper<Path> {
       final secondControlPoint =
           Offset(size.width - (size.width / 3.25), size.height - 65);
       final secondEndPoint = Offset(size.width, size.height - 40);
-      path.quadraticBezierTo(
-        secondControlPoint.dx,
-        secondControlPoint.dy,
-        secondEndPoint.dx,
-        secondEndPoint.dy,
-      );
-
-      path.lineTo(size.width, size.height - 40);
-      path.lineTo(size.width, 0);
-      path.close();
+      path
+        ..quadraticBezierTo(
+          secondControlPoint.dx,
+          secondControlPoint.dy,
+          secondEndPoint.dx,
+          secondEndPoint.dy,
+        )
+        ..lineTo(size.width, size.height - 40)
+        ..lineTo(size.width, 0)
+        ..close();
     } else if (!reverse && flip) {
       path.lineTo(0, size.height - 40);
       final firstControlPoint = Offset(size.width / 3.25, size.height - 65);
@@ -51,16 +51,16 @@ class WaveClipperTwo extends CustomClipper<Path> {
 
       final secondCP = Offset(size.width / 1.25, size.height);
       final secondEP = Offset(size.width, size.height - 30);
-      path.quadraticBezierTo(
-        secondCP.dx,
-        secondCP.dy,
-        secondEP.dx,
-        secondEP.dy,
-      );
-
-      path.lineTo(size.width, size.height - 20);
-      path.lineTo(size.width, 0);
-      path.close();
+      path
+        ..quadraticBezierTo(
+          secondCP.dx,
+          secondCP.dy,
+          secondEP.dx,
+          secondEP.dy,
+        )
+        ..lineTo(size.width, size.height - 20)
+        ..lineTo(size.width, 0)
+        ..close();
     } else if (reverse && flip) {
       path.lineTo(0, 20);
       final firstControlPoint = Offset(size.width / 3.25, 65);
@@ -74,16 +74,16 @@ class WaveClipperTwo extends CustomClipper<Path> {
 
       final secondCP = Offset(size.width / 1.25, 0);
       final secondEP = Offset(size.width, 30);
-      path.quadraticBezierTo(
-        secondCP.dx,
-        secondCP.dy,
-        secondEP.dx,
-        secondEP.dy,
-      );
-
-      path.lineTo(size.width, size.height);
-      path.lineTo(0, size.height);
-      path.close();
+      path
+        ..quadraticBezierTo(
+          secondCP.dx,
+          secondCP.dy,
+          secondEP.dx,
+          secondEP.dy,
+        )
+        ..lineTo(size.width, size.height)
+        ..lineTo(0, size.height)
+        ..close();
     } else {
       path.lineTo(0, 20);
 
@@ -98,16 +98,16 @@ class WaveClipperTwo extends CustomClipper<Path> {
 
       final secondControlPoint = Offset(size.width - (size.width / 3.25), 65);
       final secondEndPoint = Offset(size.width, 40);
-      path.quadraticBezierTo(
-        secondControlPoint.dx,
-        secondControlPoint.dy,
-        secondEndPoint.dx,
-        secondEndPoint.dy,
-      );
-
-      path.lineTo(size.width, size.height);
-      path.lineTo(0, size.height);
-      path.close();
+      path
+        ..quadraticBezierTo(
+          secondControlPoint.dx,
+          secondControlPoint.dy,
+          secondEndPoint.dx,
+          secondEndPoint.dy,
+        )
+        ..lineTo(size.width, size.height)
+        ..lineTo(0, size.height)
+        ..close();
     }
 
     return path;

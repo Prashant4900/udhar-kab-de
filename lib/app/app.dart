@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
             foregroundColor: context.colorScheme.onPrimary,
             titleTextStyle: context.textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           textTheme: GoogleFonts.poppinsTextTheme(),

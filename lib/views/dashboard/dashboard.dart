@@ -6,12 +6,12 @@ import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/account/account_screen.dart';
 import 'package:mobile/views/activity/activity_screen.dart';
 import 'package:mobile/views/friends/friends_screens.dart';
-import 'package:mobile/views/groups/groups.dart';
+import 'package:mobile/views/home/home_screen.dart';
 
 final navItems = [
   {
-    'icon': Icons.groups_outlined,
-    'label': 'Groups',
+    'icon': Icons.home,
+    'label': 'Home',
   },
   {
     'icon': Icons.person_outlined,
@@ -23,7 +23,7 @@ final navItems = [
   },
   {
     'icon': Icons.account_box,
-    'label': 'You',
+    'label': 'Account',
   },
 ];
 
@@ -57,7 +57,7 @@ class _MyDashboardState extends State<MyDashboard> {
       body: IndexedStack(
         index: selectedIndex,
         children: const [
-          MyGroupScreen(),
+          MyHomeScreen(),
           MyFriendScreen(),
           MyActivityScreen(),
           MyAccountScreen(),
