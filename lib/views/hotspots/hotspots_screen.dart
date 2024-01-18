@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
+import 'package:mobile/repositories/hotspot_repository.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/widget/body_widget.dart';
 
@@ -19,12 +20,15 @@ class MyHotSpotsScreen extends StatelessWidget {
               Container(
                 padding: horizontalPadding16 + verticalPadding12,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: context.colorScheme.primaryContainer),
+                  borderRadius: BorderRadius.circular(12),
+                  color: context.colorScheme.primaryContainer,
+                ),
                 child: Row(
                   children: [
-                    Icon(Icons.add,
-                        color: context.colorScheme.onPrimaryContainer),
+                    Icon(
+                      Icons.add,
+                      color: context.colorScheme.onPrimaryContainer,
+                    ),
                     horizontalMargin12,
                     Text(
                       'Add Hotspots',
@@ -74,22 +78,25 @@ class MyHotSpotsScreen extends StatelessWidget {
                 itemCount: 3,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     // ignore: lines_longer_than_80_chars
                     child: ListTile(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       tileColor: context.colorScheme.surfaceVariant,
                       leading: const Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Icon(Icons.home), Text('2.0 m')]),
-                      title: const Text('Food', style: TextStyle(fontWeight: FontWeight.w400),),
-                      subtitle: Column(
+                        children: [Icon(Icons.home), Text('2.0 m')],
+                      ),
+                      title: const Text(
+                        'Food',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ),
+                      subtitle: const Column(
                         children: [
-                          const Text(
+                          Text(
                             'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001',
                           ),
-                        
                         ],
                       ),
                     ),
@@ -101,7 +108,9 @@ class MyHotSpotsScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          HotspotRepository().getHotspots();
+        },
         child: const Icon(Icons.add),
       ),
     );
