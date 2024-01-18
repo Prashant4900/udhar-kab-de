@@ -1,118 +1,324 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
-import 'package:mobile/repositories/hotspot_repository.dart';
+import 'package:mobile/models/hotspot_model.dart';
 import 'package:mobile/utils/extensions.dart';
+import 'package:mobile/views/hotspots/provider/hotspot_type_provider.dart';
 import 'package:mobile/widget/body_widget.dart';
+import 'package:provider/provider.dart';
 
-class MyHotSpotsScreen extends StatelessWidget {
+final _chipsList = <String>[
+  'Snacks',
+  'Food',
+  'Petrol',
+  'Shopping',
+  'Other',
+];
+
+class MyHotSpotsScreen extends StatefulWidget {
   const MyHotSpotsScreen({super.key});
+
+  @override
+  State<MyHotSpotsScreen> createState() => _MyHotSpotsScreenState();
+}
+
+class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
+  late final TextEditingController _hotspotNameController;
+  late final TextEditingController _hotspotTypeController;
+  late final TextEditingController _hotspotLocationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _hotspotLocationController = TextEditingController();
+    _hotspotTypeController = TextEditingController();
+    _hotspotNameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _hotspotLocationController.dispose();
+    _hotspotNameController.dispose();
+    _hotspotTypeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Hotspots'),
+        title: const Text('Hotspots'),
+        centerTitle: true,
       ),
       body: BodyWidget(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: horizontalPadding16 + verticalPadding12,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: context.colorScheme.primaryContainer,
+        child: ListView.separated(
+          shrinkWrap: true,
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            const name = 'Chai Wala';
+            const location =
+                'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001';
+            return Card(
+              child: Padding(
+                padding: verticalPadding12,
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onTap: () => createUpdateHotspotsSheet(
+                    context,
+                    model: HotspotModel(
+                      hostpotName: name,
+                      hotspotLocation: location,
+                    ),
+                  ),
+                  leading: Column(
+                    children: [
+                      const Icon(
+                        Icons.home,
+                        size: 26,
+                      ),
+                      Text(
+                        '2.0 m',
+                        style: context.textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                  title: Text(
+                    name,
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: const Column(
+                    children: [
+                      verticalMargin4,
+                      Text(
+                        location,
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: context.colorScheme.onPrimaryContainer,
-                    ),
-                    horizontalMargin12,
-                    Text(
-                      'Add Hotspots',
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        color: context.colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18,
-                      color: context.colorScheme.onPrimaryContainer,
-                    ),
-                  ],
-                ),
               ),
-              verticalMargin12,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(
-                    child: SizedBox(
-                      child: Divider(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'Saved Hotspots',
-                      style: context.textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const Expanded(
-                    child: SizedBox(
-                      child: Divider(),
-                    ),
-                  ),
-                ],
-              ),
-              verticalMargin12,
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    // ignore: lines_longer_than_80_chars
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      tileColor: context.colorScheme.surfaceVariant,
-                      leading: const Column(
-                        children: [Icon(Icons.home), Text('2.0 m')],
-                      ),
-                      title: const Text(
-                        'Food',
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ),
-                      subtitle: const Column(
-                        children: [
-                          Text(
-                            'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001',
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+            );
+          },
+          separatorBuilder: (context, index) => verticalMargin8,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: context.colorScheme.primary,
         onPressed: () {
-          HotspotRepository().getHotspots();
+          createUpdateHotspotsSheet(context);
         },
-        child: const Icon(Icons.add),
+        label: Text(
+          'Add Hotspot',
+          style: context.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: context.colorScheme.onPrimary,
+          ),
+        ),
+        icon: Icon(
+          Icons.add,
+          color: context.colorScheme.onPrimary,
+        ),
       ),
+    );
+  }
+
+  Widget textFieldWithLabel({
+    required TextEditingController controller,
+    required String label,
+    int? maxLine,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: context.textTheme.bodyLarge,
+        ),
+        verticalMargin8,
+        Container(
+          decoration: BoxDecoration(
+            color: context.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              contentPadding:
+                  horizontalPadding12 + verticalPadding8 + verticalPadding2,
+              border: InputBorder.none,
+              hintText: 'Enter $label',
+              suffixIcon: InkWell(
+                onTap: () => controller.clear(),
+                child: const Icon(
+                  CupertinoIcons.clear_thick_circled,
+                  size: 16,
+                ),
+              ),
+            ),
+            maxLines: maxLine,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> createUpdateHotspotsSheet(
+    BuildContext context, {
+    HotspotModel? model,
+  }) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (context) {
+        return ListView(
+          shrinkWrap: true,
+          padding: horizontalPadding16,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            verticalMargin32,
+            Row(
+              children: [
+                Text(
+                  'Create Hotspots',
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colorScheme.primary,
+                    fontSize: 20,
+                  ),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    'Close',
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colorScheme.error,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Divider(),
+            verticalMargin12,
+            Text(
+              'Hotspot type *',
+              style: context.textTheme.bodyLarge,
+            ),
+            verticalMargin12,
+            Consumer<HotspotTypeProvider>(
+              builder: (context, ref, child) {
+                final selectedIndex = ref.selectedIndex;
+                _hotspotLocationController.text = model?.hotspotLocation ?? '';
+                _hotspotNameController.text = model?.hostpotName ?? '';
+                return selectedIndex != 4
+                    ? SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: rightPadding12,
+                              child: InkWell(
+                                onTap: () => ref.updateSelectedIndex(index),
+                                borderRadius: BorderRadius.circular(12),
+                                child: Hero(
+                                  tag: _chipsList[index],
+                                  child: Chip(
+                                    backgroundColor: index == selectedIndex
+                                        ? context.colorScheme.primaryContainer
+                                        : null,
+                                    label: Text(
+                                      _chipsList[index],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          shrinkWrap: true,
+                          itemCount: _chipsList.length,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      )
+                    : Hero(
+                        tag: _chipsList[selectedIndex],
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () => ref.updateSelectedIndex(-1),
+                              borderRadius: BorderRadius.circular(12),
+                              child: Chip(
+                                backgroundColor:
+                                    context.colorScheme.primaryContainer,
+                                label: Text(_chipsList[selectedIndex]),
+                              ),
+                            ),
+                            horizontalMargin12,
+                            Expanded(
+                              child: TextField(
+                                controller: _hotspotTypeController,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Hotspot Type',
+                                  suffixIcon: InkWell(
+                                    onTap: () {
+                                      _hotspotTypeController.clear();
+                                      ref.updateSelectedIndex(-1);
+                                    },
+                                    child: const Icon(
+                                      CupertinoIcons.clear_thick_circled,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+              },
+            ),
+            verticalMargin16,
+            textFieldWithLabel(
+              controller: _hotspotNameController,
+              label: 'Hotspot Name',
+            ),
+            verticalMargin16,
+            textFieldWithLabel(
+              controller: _hotspotLocationController,
+              label: 'Location',
+              maxLine: 4,
+            ),
+            verticalMargin16,
+            InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: context.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(
+                    'Save',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colorScheme.onPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            verticalMargin48,
+          ],
+        );
+      },
     );
   }
 }

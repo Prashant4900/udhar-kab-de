@@ -8,11 +8,11 @@ class HotspotRepository {
 
   Future<void> createHotspot(HotspotModel hotspotModel) async {
     try {
-      await _database.createDocument(
+      final document = await _database.createDocument(
         databaseId: AppWriteClient.databaseId,
         collectionId: AppWriteClient.hotspotCollectionId,
         documentId: ID.unique(),
-        data: hotspotModel.data!.toJson(),
+        data: hotspotModel.toJson(),
       );
     } catch (e) {
       throw Exception(e);
@@ -25,7 +25,6 @@ class HotspotRepository {
         databaseId: AppWriteClient.databaseId,
         collectionId: AppWriteClient.hotspotCollectionId,
       );
-     
     } on AppwriteException catch (e) {
       throw Exception(e);
     }

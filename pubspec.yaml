@@ -42,7 +42,9 @@ dependencies:
   google_fonts: ^6.1.0
   # intl: ^0.19.0
   # meta: ^1.9.1
+  intl: ^0.19.0
   pinput: ^3.0.1
+  provider: ^6.1.1
   shared_preferences: ^2.2.2
 
 dev_dependencies:
@@ -80,6 +82,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/svg/
+    - assets/images/
     - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see

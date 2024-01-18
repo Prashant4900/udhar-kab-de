@@ -41,15 +41,14 @@ class _MyDashboardState extends State<MyDashboard> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        backgroundColor: context.colorScheme.primary,
         title: Hero(
           tag: HeroTags.fullTextLogo,
           child: Text(
-            navItems[selectedIndex]['label']! as String,
-            // 'Udhar Kab dega',
+            selectedIndex == 0
+                ? 'Udhar Kab dega'
+                : navItems[selectedIndex]['label']! as String,
             style: context.textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.bold,
-              color: context.colorScheme.onPrimary,
             ),
           ),
         ),

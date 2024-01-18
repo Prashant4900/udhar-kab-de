@@ -117,6 +117,13 @@ class AuthRepository {
             'registrationDate': user.registration,
             'accessedAt': user.accessedAt,
             'passwordUpdate': user.passwordUpdate,
+            'hotspot': [
+              {
+                'hostpotName': 'hostpot1Name',
+                'hotspotLocation': 'hots1potLocation',
+                'hotspotType': 'hotspotTy1pe',
+              },
+            ],
           },
         );
       } else {
@@ -137,6 +144,13 @@ class AuthRepository {
             'registrationDate': user.registration,
             'accessedAt': user.accessedAt,
             'passwordUpdate': user.passwordUpdate,
+            'hotspot': [
+              {
+                'hostpotName': 'hostpotName1',
+                'hotspotLocation': 'hotspotL1ocation',
+                'hotspotType': 'hotspotType1',
+              },
+            ],
           },
         );
       }
