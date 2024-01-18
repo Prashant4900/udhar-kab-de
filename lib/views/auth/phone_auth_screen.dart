@@ -89,6 +89,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                   ),
                   child: Center(
                     child: TextFormField(
+                      keyboardType:TextInputType.number,
                       controller: phoneController,
                       onChanged: (_) => setState(() {}),
                       decoration: InputDecoration(

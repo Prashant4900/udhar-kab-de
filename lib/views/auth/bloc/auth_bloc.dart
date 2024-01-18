@@ -104,7 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
-  }
+  }    
 
   FutureOr<void> _validateOTP(
     ValidateOTPEvent event,

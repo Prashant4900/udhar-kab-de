@@ -71,13 +71,28 @@ class MyHotSpotsScreen extends StatelessWidget {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: 10,
+                itemCount: 3,
                 itemBuilder: (context, index) {
-                  return const ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Food'),
-                    subtitle: Text(
-                        'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001'),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    // ignore: lines_longer_than_80_chars
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      tileColor: context.colorScheme.surfaceVariant,
+                      leading: const Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [Icon(Icons.home), Text('2.0 m')]),
+                      title: const Text('Food', style: TextStyle(fontWeight: FontWeight.w400),),
+                      subtitle: Column(
+                        children: [
+                          const Text(
+                            'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001',
+                          ),
+                        
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),
@@ -86,9 +101,8 @@ class MyHotSpotsScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        elevation: 0,
         onPressed: () {},
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

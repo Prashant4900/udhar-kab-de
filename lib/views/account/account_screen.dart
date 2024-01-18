@@ -54,16 +54,17 @@ class MyAccountScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        state.user?.name != ''
+                        (state.user?.name != null && state.user?.name != '')
                             ? state.user!.name
                             : 'Guest User',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       verticalMargin4,
                       Text(
-                        state.user?.email != ''
+                        (state.user?.email != '' && state.user?.email != null)
                             ? state.user!.email
-                            : state.user?.phone != ''
+                            : (state.user?.phone != '' &&
+                                    state.user?.phone != null)
                                 ? state.user!.phone
                                 : '',
                         style: Theme.of(context).textTheme.bodySmall,

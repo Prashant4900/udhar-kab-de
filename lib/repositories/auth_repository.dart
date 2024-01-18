@@ -153,7 +153,8 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       await _account.deleteSession(sessionId: 'current');
-      await AppPrefHelper.deleteUserID();
+      await AppPref.clear();
+      //await AppPrefHelper.deleteUserID();
     } catch (e) {
       throw Exception(e);
     }
