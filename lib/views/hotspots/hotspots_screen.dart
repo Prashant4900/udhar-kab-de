@@ -13,60 +13,82 @@ class MyHotSpotsScreen extends StatelessWidget {
         title: const Text('My Hotspots'),
       ),
       body: BodyWidget(
-        child: Column(
-          children: [
-            Container(
-              padding: horizontalPadding16 + verticalPadding12,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: context.colorScheme.primary,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: horizontalPadding16 + verticalPadding12,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: context.colorScheme.primaryContainer),
+                child: Row(
+                  children: [
+                    Icon(Icons.add,
+                        color: context.colorScheme.onPrimaryContainer),
+                    horizontalMargin12,
+                    Text(
+                      'Add Hotspots',
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        color: context.colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: context.colorScheme.onPrimaryContainer,
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
+              verticalMargin12,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.add,
-                    color: context.colorScheme.onPrimary,
-                  ),
-                  horizontalMargin12,
-                  Text(
-                    'Add Hotspots',
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      color: context.colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
+                  const Expanded(
+                    child: SizedBox(
+                      child: Divider(),
                     ),
                   ),
-                  const Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 18,
-                    color: context.colorScheme.onPrimary,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'Saved Hotspots',
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    child: SizedBox(
+                      child: Divider(),
+                    ),
                   ),
                 ],
               ),
-            ),
-            verticalMargin12,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: context.mediaQuery.size.width * .29,
-                  child: const Divider(),
-                ),
-                Text(
-                  'Saved Hotspots',
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  width: context.mediaQuery.size.width * .29,
-                  child: const Divider(),
-                ),
-              ],
-            ),
-            verticalMargin12,
-          ],
+              verticalMargin12,
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return const ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Food'),
+                    subtitle: Text(
+                        'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001'),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 0,
+        onPressed: () {},
+        child: Icon(Icons.add),
       ),
     );
   }
