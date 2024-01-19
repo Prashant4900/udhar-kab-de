@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appwrite/models.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mobile/models/user_model.dart';
 import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/setup.dart';
 
@@ -104,7 +105,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
-  }    
+  }
 
   FutureOr<void> _validateOTP(
     ValidateOTPEvent event,

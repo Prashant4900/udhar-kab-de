@@ -1,49 +1,97 @@
-import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
-class HotspotModel {
-  HotspotModel({
-    this.hostpotName,
+class HotspotModel extends Equatable {
+  const HotspotModel({
+    this.permissions,
+    this.hotspotName,
     this.hotspotLocation,
     this.hotspotType,
     this.id,
     this.createdAt,
     this.updatedAt,
-    this.databaseId,
-    this.collectionId,
+    // this.user,
   });
 
-  factory HotspotModel.fromRawJson(String str) =>
-      HotspotModel.fromJson(json.decode(str) as Map<String, dynamic>);
-
-  factory HotspotModel.fromJson(Map<String, dynamic> json) => HotspotModel(
-        hostpotName: json['hostpotName'] as String?,
+  factory HotspotModel.fromMap(Map<String, dynamic> json) => HotspotModel(
+        hotspotName: json['hotspotName'] as String?,
         hotspotLocation: json['hotspotLocation'] as String?,
         hotspotType: json['hotspotType'] as String?,
-        id: json['\u0024id'] as String?,
-        createdAt: json['\u0024createdAt'] as String?,
-        updatedAt: json['\u0024updatedAt'] as String?,
-        databaseId: json['\u0024databaseId'] as String?,
-        collectionId: json['\u0024collectionId'] as String?,
+        id: json[r'$id'] as String?,
+        createdAt: json[r'$createdAt'] as String?,
+        updatedAt: json[r'$updatedAt'] as String?,
+        permissions: List<String>.from([]),
+        // user: json['users'] == null
+        //     ? null
+        //     : UserModel.fromMap(json['users'] as Map<String, dynamic>),
       );
-  final String? hostpotName;
+
+  final String? hotspotName;
   final String? hotspotLocation;
   final String? hotspotType;
   final String? id;
   final String? createdAt;
   final String? updatedAt;
-  final String? databaseId;
-  final String? collectionId;
+  final List<String>? permissions;
+  // final UserModel? user;
 
-  String toRawJson() => json.encode(toJson());
-
-  Map<String, dynamic> toJson() => {
-        'hostpotName': hostpotName,
+  Map<String, dynamic> toMap() => {
+        'hotspotName': hotspotName,
         'hotspotLocation': hotspotLocation,
         'hotspotType': hotspotType,
-        '\u0024id': id,
-        '\u0024createdAt': createdAt,
-        '\u0024updatedAt': updatedAt,
-        '\u0024databaseId': databaseId,
-        '\u0024collectionId': collectionId,
+        // 'users': user!.toMap(),
+        r'$id': id,
+        r'$createdAt': createdAt,
+        r'$updatedAt': updatedAt,
+        r'$permissions': permissions,
       };
+
+  @override
+  List<Object?> get props {
+    return [
+      hotspotName,
+      hotspotLocation,
+      hotspotType,
+      id,
+      createdAt,
+      updatedAt,
+      permissions,
+      // user,
+    ];
+  }
+
+  @override
+  String toString() {
+    return 'HotspotModel {'
+        ' hotspotName: $hotspotName,'
+        ' hotspotLocation: $hotspotLocation,'
+        ' hotspotType: $hotspotType,'
+        ' id: $id,'
+        // ' user: $user,'
+        ' createdAt: $createdAt,'
+        ' updatedAt: $updatedAt,'
+        ' permissions: $permissions'
+        ' }';
+  }
+
+  HotspotModel copyWith({
+    String? hotspotName,
+    String? hotspotLocation,
+    String? hotspotType,
+    String? id,
+    String? createdAt,
+    String? updatedAt,
+    List<String>? permissions,
+    // UserModel? user,
+  }) {
+    return HotspotModel(
+      hotspotName: hotspotName ?? this.hotspotName,
+      hotspotLocation: hotspotLocation ?? this.hotspotLocation,
+      hotspotType: hotspotType ?? this.hotspotType,
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      permissions: permissions ?? this.permissions,
+      // user: user ?? this.user,
+    );
+  }
 }

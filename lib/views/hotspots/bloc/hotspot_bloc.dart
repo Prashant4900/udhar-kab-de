@@ -37,7 +37,10 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
   ) async {
     emit(state.copyWith(status: HotspotStatus.loading));
 
-    try {} catch (e) {
+    try {
+      final hotspots = await hotspotRepository.getHotspots();
+      emit(state.copyWith(hotspots: hotspots, status: HotspotStatus.success));
+    } catch (e) {
       final message = e.toString();
       emit(state.copyWith(status: HotspotStatus.failure, message: message));
     }

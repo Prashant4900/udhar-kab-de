@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/gen/assets.gen.dart';
+import 'package:mobile/repositories/hotspot_repository.dart';
 import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/date_time.dart';
 import 'package:mobile/utils/extensions.dart';
@@ -54,7 +55,7 @@ class MyAccountScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CircleAvatar(
-                            radius: 35,
+                            radius: 30,
                             backgroundColor: const Color(0xFFF1F1F1),
                             child: (state.user?.name != null &&
                                     state.user?.name != '')
@@ -73,7 +74,7 @@ class MyAccountScreen extends StatelessWidget {
                           ),
                           horizontalMargin16,
                           SizedBox(
-                            height: 70,
+                            height: 65,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -114,6 +115,7 @@ class MyAccountScreen extends StatelessWidget {
                       ),
                       verticalMargin12,
                       const Divider(),
+                      verticalMargin4,
                       Row(
                         children: [
                           Text(
@@ -146,7 +148,26 @@ class MyAccountScreen extends StatelessWidget {
                   color: Colors.grey,
                   size: 18,
                 ),
-                onTap: () {},
+                onTap: () async {
+                  // await UserRepository().getUserData();
+                  await HotspotRepository().getHotspots();
+                  // await HotspotRepository().createHotspot(
+                  //   const HotspotModel(
+                  //     hotspotName: 'My Name',
+                  //     hotspotLocation: 'My Location',
+                  //     hotspotType: 'My type',
+                  //   ),
+                  // );
+                  // log(data.toString());
+                  // HotspotRepository().createHotspot(
+                  //   HotspotModel(
+                  //     hostpotName: 'ASDFG',
+                  //     hotspotLocation: 'asdfgghhh',
+                  //     hotspotType: 'qwerrt',
+                  //     userDocID: '65a972b9e33eb41f8a61',
+                  //   ),
+                  // );
+                },
               ),
               verticalMargin12,
               SingleRowTile(

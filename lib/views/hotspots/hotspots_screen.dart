@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/models/hotspot_model.dart';
 import 'package:mobile/utils/extensions.dart';
+import 'package:mobile/views/hotspots/bloc/hotspot_bloc.dart';
 import 'package:mobile/views/hotspots/provider/hotspot_type_provider.dart';
 import 'package:mobile/widget/body_widget.dart';
 import 'package:provider/provider.dart';
@@ -45,82 +47,84 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hotspots'),
-        centerTitle: true,
-      ),
-      body: BodyWidget(
-        child: ListView.separated(
-          shrinkWrap: true,
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            const name = 'Chai Wala';
-            const location =
-                'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001';
-            return Card(
-              elevation: 0,
-              child: Padding(
-                padding: verticalPadding12,
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onTap: () => createUpdateHotspotsSheet(
-                    context,
-                    model: HotspotModel(
-                      hostpotName: name,
-                      hotspotLocation: location,
+    return BlocProvider(
+      create: (context) => HotspotBloc()..add(GetAllHotspotEvent()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Hotspots'),
+          centerTitle: true,
+        ),
+        body: BlocConsumer<HotspotBloc, HotspotState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            return BodyWidget(
+              isLoading: state.status == HotspotStatus.loading,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: state.hotspots!.length,
+                itemBuilder: (context, index) {
+                  final hotspotItem = state.hotspots![index];
+                  return Card(
+                    elevation: 0,
+                    child: Padding(
+                      padding: verticalPadding12,
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onTap: () => createUpdateHotspotsSheet(
+                          context,
+                          model: HotspotModel(
+                            hotspotName: hotspotItem.hotspotName,
+                            hotspotLocation: hotspotItem.hotspotLocation,
+                          ),
+                        ),
+                        leading: Column(
+                          children: [
+                            const Icon(
+                              Icons.home,
+                              size: 26,
+                            ),
+                            Text(
+                              '2.0 m',
+                              style: context.textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                        title: Text(
+                          hotspotItem.hotspotName!,
+                          style: context.textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          hotspotItem.hotspotLocation!,
+                        ),
+                      ),
                     ),
-                  ),
-                  leading: Column(
-                    children: [
-                      const Icon(
-                        Icons.home,
-                        size: 26,
-                      ),
-                      Text(
-                        '2.0 m',
-                        style: context.textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                  title: Text(
-                    name,
-                    style: context.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: const Column(
-                    children: [
-                      verticalMargin4,
-                      Text(
-                        location,
-                      ),
-                    ],
-                  ),
-                ),
+                  );
+                },
+                separatorBuilder: (context, index) => verticalMargin8,
               ),
             );
           },
-          separatorBuilder: (context, index) => verticalMargin8,
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: context.colorScheme.primary,
-        onPressed: () {
-          createUpdateHotspotsSheet(context);
-        },
-        label: Text(
-          'Add Hotspot',
-          style: context.textTheme.bodyLarge!.copyWith(
-            fontWeight: FontWeight.w600,
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: context.colorScheme.primary,
+          onPressed: () {
+            createUpdateHotspotsSheet(context);
+          },
+          label: Text(
+            'Add Hotspot',
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.colorScheme.onPrimary,
+            ),
+          ),
+          icon: Icon(
+            Icons.add,
             color: context.colorScheme.onPrimary,
           ),
-        ),
-        icon: Icon(
-          Icons.add,
-          color: context.colorScheme.onPrimary,
         ),
       ),
     );
@@ -223,7 +227,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
               builder: (context, ref, child) {
                 final selectedIndex = ref.selectedIndex;
                 _hotspotLocationController.text = model?.hotspotLocation ?? '';
-                _hotspotNameController.text = model?.hostpotName ?? '';
+                _hotspotNameController.text = model?.hotspotName ?? '';
                 return selectedIndex != 4
                     ? SizedBox(
                         height: 50,

@@ -26,7 +26,7 @@ class AuthRepository {
 
       final user = await getCurrentSessionUser();
       log('username: ${user.name}, email: ${user.email}, id: ${user.$id}');
-      await insertOrUpdateUser(user);
+      // await insertOrUpdateUser(user);
       await AppPrefHelper.setUserID(user.$id);
       return user;
     } catch (e) {
