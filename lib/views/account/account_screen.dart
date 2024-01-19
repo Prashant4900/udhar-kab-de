@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/gen/assets.gen.dart';
 import 'package:mobile/routes/route_manager.dart';
+import 'package:mobile/utils/date_time.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/auth/bloc/auth_bloc.dart';
 import 'package:mobile/widget/feature_tile.dart';
-
-String formatDate(String isoDate) {
-  // Parse the ISO date time string
-  final dateTime = DateTime.parse(isoDate);
-
-  // Format the date time to month-year format
-  final formattedDate = DateFormat.yMMMM().format(dateTime);
-
-  return formattedDate;
-}
 
 class MyAccountScreen extends StatelessWidget {
   const MyAccountScreen({super.key});
@@ -75,7 +65,11 @@ class MyAccountScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   )
-                                : const Icon(Icons.person),
+                                : const Icon(
+                                    Icons.person,
+                                    size: 32,
+                                    color: Colors.black,
+                                  ),
                           ),
                           horizontalMargin16,
                           SizedBox(
@@ -144,22 +138,26 @@ class MyAccountScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              verticalMargin12,
-              const Divider(),
-              verticalMargin12,
-              FeatureTile(
-                title: 'HotSpot Area',
-                icon: Icons.store_mall_directory,
-                onTap: () {
-                  Navigator.pushNamed(context, MyRoutes.hotspotsScreen);
-                },
+              verticalMargin24,
+              SingleRowTile(
+                label: 'Your Profile',
+                icon: const Icon(
+                  Icons.person_outline_rounded,
+                  color: Colors.grey,
+                  size: 18,
+                ),
+                onTap: () {},
               ),
-              FeatureTile(
-                title: 'Account',
-                icon: Icons.person,
-                onTap: () {
-                  Navigator.pushNamed(context, MyRoutes.accountDetail);
-                },
+              verticalMargin12,
+              SingleRowTile(
+                label: 'Hotspot Areas',
+                icon: const Icon(
+                  Icons.location_on_outlined,
+                  color: Colors.grey,
+                  size: 18,
+                ),
+                onTap: () =>
+                    Navigator.pushNamed(context, MyRoutes.hotspotsScreen),
               ),
               verticalMargin12,
               Text(

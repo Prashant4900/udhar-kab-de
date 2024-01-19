@@ -75,7 +75,7 @@ class MyLoginScreen extends StatelessWidget {
                 const Spacer(flex: 6),
                 Padding(
                   padding: horizontalPadding16,
-                  child: AuthButton(
+                  child: CustomButton(
                     icon: Icon(
                       Icons.phone,
                       color: context.colorScheme.onPrimary,
@@ -95,7 +95,7 @@ class MyLoginScreen extends StatelessWidget {
                 else
                   Padding(
                     padding: horizontalPadding16,
-                    child: AuthButton(
+                    child: CustomButton(
                       label: 'Sign in With Google',
                       icon: Assets.svg.googleIcon.svg(
                         width: kToolbarHeight / 2.2,

@@ -59,6 +59,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
             const location =
                 'Lohiya Bazaar Rd, Dal Bazaar, Lashkar, Gwalior, Madhya Pradesh 474001';
             return Card(
+              elevation: 0,
               child: Padding(
                 padding: verticalPadding12,
                 child: ListTile(
@@ -128,14 +129,21 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
   Widget textFieldWithLabel({
     required TextEditingController controller,
     required String label,
+    Widget? icon,
     int? maxLine,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: context.textTheme.bodyLarge,
+        Row(
+          children: [
+            Text(
+              label,
+              style: context.textTheme.bodyLarge,
+            ),
+            const Spacer(),
+            icon ?? emptyWidget,
+          ],
         ),
         verticalMargin8,
         Container(
@@ -291,6 +299,13 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
               controller: _hotspotLocationController,
               label: 'Location',
               maxLine: 4,
+              icon: InkWell(
+                onTap: () {},
+                child: Icon(
+                  Icons.location_on,
+                  color: context.colorScheme.primary,
+                ),
+              ),
             ),
             verticalMargin16,
             InkWell(

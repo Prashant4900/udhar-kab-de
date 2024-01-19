@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/utils/extensions.dart';
 
-class AuthButton extends StatelessWidget {
-  const AuthButton({
+class CustomButton extends StatelessWidget {
+  const CustomButton({
     required this.label,
     this.onTap,
     this.icon,

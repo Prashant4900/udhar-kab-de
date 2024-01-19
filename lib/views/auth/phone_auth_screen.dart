@@ -89,7 +89,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                   ),
                   child: Center(
                     child: TextFormField(
-                      keyboardType:TextInputType.number,
+                      keyboardType: TextInputType.number,
                       controller: phoneController,
                       onChanged: (_) => setState(() {}),
                       decoration: InputDecoration(
@@ -122,7 +122,7 @@ class _MyPhoneAuthScreenState extends State<MyPhoneAuthScreen> {
                 if (state.accountStatus == AccountStatus.loading)
                   const Center(child: CircularProgressIndicator.adaptive())
                 else
-                  AuthButton(
+                  CustomButton(
                     onTap: phoneController.text.length != 10
                         ? null
                         : () {
