@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/gen/assets.gen.dart';
-import 'package:mobile/repositories/hotspot_repository.dart';
 import 'package:mobile/routes/route_manager.dart';
 import 'package:mobile/utils/date_time.dart';
 import 'package:mobile/utils/extensions.dart';
@@ -36,139 +35,7 @@ class MyAccountScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 150,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      Assets.images.background.path,
-                    ),
-                    fit: BoxFit.fill,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: verticalPadding16 + horizontalPadding12,
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor: const Color(0xFFF1F1F1),
-                            child: (state.user?.name != null &&
-                                    state.user?.name != '')
-                                ? Text(
-                                    state.user!.name.characters.first,
-                                    style: context.textTheme.headlineMedium!
-                                        .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.person,
-                                    size: 32,
-                                    color: Colors.black,
-                                  ),
-                          ),
-                          horizontalMargin16,
-                          SizedBox(
-                            height: 65,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  (state.user?.name != null &&
-                                          state.user?.name != '')
-                                      ? state.user!.name
-                                      : 'Guest User',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                // verticalMargin8,
-                                Text(
-                                  (state.user?.email != '' &&
-                                          state.user?.email != null)
-                                      ? state.user!.email
-                                      : (state.user?.phone != '' &&
-                                              state.user?.phone != null)
-                                          ? state.user!.phone
-                                          : '',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      verticalMargin12,
-                      const Divider(),
-                      verticalMargin4,
-                      Row(
-                        children: [
-                          Text(
-                            'Joined At: '
-                            '${formatDate(state.user!.registration)}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: Colors.white,
-                                ),
-                          ),
-                          const Spacer(),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              verticalMargin24,
-              SingleRowTile(
-                label: 'Your Profile',
-                icon: const Icon(
-                  Icons.person_outline_rounded,
-                  color: Colors.grey,
-                  size: 18,
-                ),
-                onTap: () async {
-                  // await UserRepository().getUserData();
-                  await HotspotRepository().getHotspots();
-                  // await HotspotRepository().createHotspot(
-                  //   const HotspotModel(
-                  //     hotspotName: 'My Name',
-                  //     hotspotLocation: 'My Location',
-                  //     hotspotType: 'My type',
-                  //   ),
-                  // );
-                  // log(data.toString());
-                  // HotspotRepository().createHotspot(
-                  //   HotspotModel(
-                  //     hostpotName: 'ASDFG',
-                  //     hotspotLocation: 'asdfgghhh',
-                  //     hotspotType: 'qwerrt',
-                  //     userDocID: '65a972b9e33eb41f8a61',
-                  //   ),
-                  // );
-                },
-              ),
+              UserCard(state: state),
               verticalMargin12,
               SingleRowTile(
                 label: 'Hotspot Areas',
@@ -181,33 +48,150 @@ class MyAccountScreen extends StatelessWidget {
                     Navigator.pushNamed(context, MyRoutes.hotspotsScreen),
               ),
               verticalMargin12,
-              Text(
-                'Feedback',
-                style: context.textTheme.bodyMedium!.copyWith(
-                  color: context.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              verticalMargin12,
-              const FeatureTile(
-                title: 'Rate Us',
-                icon: Icons.star,
-              ),
-              const FeatureTile(
-                title: 'Contact Us',
-                icon: Icons.message,
-              ),
-              const Divider(),
-              FeatureTile(
-                title: 'Log Out',
-                icon: Icons.logout,
-                color: context.colorScheme.error,
-                onTap: () => context.read<AuthBloc>()..add(SignOutEvent()),
+              MultiRowTile(
+                label: 'More',
+                children: [
+                  const MultiRowTileModel(
+                    title: 'About',
+                    icon: Icons.info_outline,
+                  ),
+                  const MultiRowTileModel(
+                    title: 'Feedback',
+                    icon: Icons.edit_outlined,
+                  ),
+                  const MultiRowTileModel(
+                    title: 'Rate Us',
+                    icon: Icons.rate_review_outlined,
+                  ),
+                  const MultiRowTileModel(
+                    title: 'Contact Us',
+                    icon: Icons.mail_outline_rounded,
+                  ),
+                  MultiRowTileModel(
+                    title: 'Logout',
+                    icon: Icons.power_settings_new_outlined,
+                    onTap: () => context.read<AuthBloc>()..add(SignOutEvent()),
+                  ),
+                ],
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class UserCard extends StatelessWidget {
+  const UserCard({
+    required this.state,
+    super.key,
+  });
+
+  final AuthState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            Assets.images.background.path,
+          ),
+          fit: BoxFit.fill,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, MyRoutes.accountDetail);
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: verticalPadding16 + horizontalPadding12,
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: const Color(0xFFF1F1F1),
+                    child: (state.user?.name != null && state.user?.name != '')
+                        ? Text(
+                            state.user!.name.characters.first,
+                            style: context.textTheme.headlineMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.person,
+                            size: 32,
+                            color: Colors.black,
+                          ),
+                  ),
+                  horizontalMargin16,
+                  SizedBox(
+                    height: 65,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          (state.user?.name != null && state.user?.name != '')
+                              ? state.user!.name
+                              : 'Guest User',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        // verticalMargin8,
+                        Text(
+                          (state.user?.email != '' && state.user?.email != null)
+                              ? state.user!.email
+                              : (state.user?.phone != '' &&
+                                      state.user?.phone != null)
+                                  ? state.user!.phone
+                                  : '',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.white,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              verticalMargin12,
+              const Divider(),
+              verticalMargin4,
+              Row(
+                children: [
+                  Text(
+                    'Joined At: '
+                    '${formatDate(state.user!.registration)}',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -10,12 +10,12 @@ class HotspotState extends Equatable {
 
   final String? message;
   final HotspotStatus? status;
-  final List<HotspotModel>? hotspots;
+  final List<HotspotResponseModel>? hotspots;
 
   HotspotState copyWith({
     String? message,
     HotspotStatus? status,
-    List<HotspotModel>? hotspots,
+    List<HotspotResponseModel>? hotspots,
   }) {
     return HotspotState(
       message: message ?? this.message,

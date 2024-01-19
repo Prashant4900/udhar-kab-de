@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:mobile/models/hotspot_model.dart';
+import 'package:mobile/models/hotspots/hotspot_response_model.dart';
 
 class UserModel extends Equatable {
   const UserModel({
@@ -44,7 +44,9 @@ class UserModel extends Equatable {
         updatedAt: json[r'$updatedAt'] as String?,
         hotspot: (json['hotspot'] as List<dynamic>?)
                 ?.map(
-                  (item) => HotspotModel.fromMap(item as Map<String, dynamic>),
+                  (item) => HotspotResponseModel.fromMap(
+                    item as Map<String, dynamic>,
+                  ),
                 )
                 .toList() ??
             [],
@@ -65,7 +67,7 @@ class UserModel extends Equatable {
   final String? id;
   final String? createdAt;
   final String? updatedAt;
-  final List<HotspotModel>? hotspot;
+  final List<HotspotResponseModel>? hotspot;
   final List<String>? permissions;
   final String? databaseId;
   final String? collectionId;
@@ -106,7 +108,7 @@ class UserModel extends Equatable {
     String? id,
     String? createdAt,
     String? updatedAt,
-    List<HotspotModel>? hotspot,
+    List<HotspotResponseModel>? hotspot,
     List<String>? permissions,
     String? databaseId,
     String? collectionId,

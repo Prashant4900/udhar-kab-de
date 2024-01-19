@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/constants/commons.dart';
+import 'package:mobile/gen/assets.gen.dart';
 
 class BodyWidget extends StatelessWidget {
   const BodyWidget({
     required this.child,
     super.key,
-    this.padding,
     this.isLoading = false,
   });
 
   final Widget child;
-  final EdgeInsets? padding;
   final bool isLoading;
 
   @override
@@ -19,36 +17,16 @@ class BodyWidget extends StatelessWidget {
       ignoring: isLoading,
       child: Stack(
         children: [
-          Stack(
-            children: [
-              Padding(
-                padding: padding ?? allPadding16,
-                child: child,
-              ),
-              if (isLoading)
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.grey.withOpacity(.3),
-                )
-              else
-                emptyWidget,
-            ],
-          ),
+          child,
           if (isLoading)
-            Center(
-              child: Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const CircularProgressIndicator.adaptive(),
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.grey.withOpacity(.5),
+              child: Center(
+                child: Assets.lottie.loading.lottie(),
               ),
-            )
-          else
-            emptyWidget,
+            ),
         ],
       ),
     );

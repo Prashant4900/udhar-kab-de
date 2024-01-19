@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
-import 'package:mobile/models/hotspot_model.dart';
+import 'package:mobile/models/hotspots/hotspot_request_model.dart';
+import 'package:mobile/models/hotspots/hotspot_response_model.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/hotspots/bloc/hotspot_bloc.dart';
 import 'package:mobile/views/hotspots/provider/hotspot_type_provider.dart';
 import 'package:mobile/widget/body_widget.dart';
+import 'package:mobile/widget/button_widget.dart';
 import 'package:provider/provider.dart';
 
 final _chipsList = <String>[
@@ -49,19 +51,20 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HotspotBloc()..add(GetAllHotspotEvent()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Hotspots'),
-          centerTitle: true,
-        ),
-        body: BlocConsumer<HotspotBloc, HotspotState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return BodyWidget(
-              isLoading: state.status == HotspotStatus.loading,
-              child: ListView.separated(
+      child: BlocConsumer<HotspotBloc, HotspotState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return BodyWidget(
+            isLoading: state.status == HotspotStatus.loading,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('Hotspots'),
+                centerTitle: true,
+              ),
+              body: ListView.separated(
                 shrinkWrap: true,
-                itemCount: state.hotspots!.length,
+                padding: allPadding16,
+                itemCount: state.hotspots?.length ?? 0,
                 itemBuilder: (context, index) {
                   final hotspotItem = state.hotspots![index];
                   return Card(
@@ -72,33 +75,43 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        onTap: () => createUpdateHotspotsSheet(
-                          context,
-                          model: HotspotModel(
-                            hotspotName: hotspotItem.hotspotName,
-                            hotspotLocation: hotspotItem.hotspotLocation,
+                        onTap: () {
+                          createUpdateHotspotsSheet(
+                            context,
+                            // model: HotspotRequestModel(
+                            //   hotspotName: hotspotItem.hotspotName,
+                            //   hotspotLocation: hotspotItem.hotspotLocation,
+                            // ),
+                          );
+                        },
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.redAccent,
                           ),
-                        ),
-                        leading: Column(
-                          children: [
-                            const Icon(
-                              Icons.home,
-                              size: 26,
-                            ),
-                            Text(
-                              '2.0 m',
-                              style: context.textTheme.bodySmall,
-                            ),
-                          ],
+                          onPressed: () {
+                            context.read<HotspotBloc>().add(
+                                  DeleteHotspotEvent(
+                                    hotspotModel: HotspotRequestModel(
+                                      id: hotspotItem.id,
+                                    ),
+                                  ),
+                                );
+                          },
                         ),
                         title: Text(
-                          hotspotItem.hotspotName!,
-                          style: context.textTheme.titleMedium!.copyWith(
+                          hotspotItem.id ?? 'fg',
+                          style: context.textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(
                           hotspotItem.hotspotLocation!,
+                          style: context.textTheme.bodyMedium,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -106,26 +119,26 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                 },
                 separatorBuilder: (context, index) => verticalMargin8,
               ),
-            );
-          },
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: context.colorScheme.primary,
-          onPressed: () {
-            createUpdateHotspotsSheet(context);
-          },
-          label: Text(
-            'Add Hotspot',
-            style: context.textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.colorScheme.onPrimary,
+              floatingActionButton: FloatingActionButton.extended(
+                backgroundColor: context.colorScheme.primary,
+                onPressed: () {
+                  createUpdateHotspotsSheet(context);
+                },
+                label: Text(
+                  'Add Hotspot',
+                  style: context.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.colorScheme.onPrimary,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.add,
+                  color: context.colorScheme.onPrimary,
+                ),
+              ),
             ),
-          ),
-          icon: Icon(
-            Icons.add,
-            color: context.colorScheme.onPrimary,
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -152,7 +165,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
         verticalMargin8,
         Container(
           decoration: BoxDecoration(
-            color: context.colorScheme.primaryContainer,
+            color: context.colorScheme.primaryContainer.withOpacity(0.7),
             borderRadius: BorderRadius.circular(8),
           ),
           child: TextField(
@@ -179,12 +192,13 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
 
   Future<void> createUpdateHotspotsSheet(
     BuildContext context, {
-    HotspotModel? model,
+    HotspotResponseModel? model,
   }) async {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (context) {
         return ListView(
           shrinkWrap: true,
@@ -236,13 +250,18 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                             return Padding(
                               padding: rightPadding12,
                               child: InkWell(
-                                onTap: () => ref.updateSelectedIndex(index),
+                                onTap: () {
+                                  ref.updateSelectedIndex(index);
+                                  _hotspotTypeController.text =
+                                      _chipsList[index];
+                                },
                                 borderRadius: BorderRadius.circular(12),
                                 child: Hero(
                                   tag: _chipsList[index],
                                   child: Chip(
                                     backgroundColor: index == selectedIndex
                                         ? context.colorScheme.primaryContainer
+                                            .withOpacity(0.7)
                                         : null,
                                     label: Text(
                                       _chipsList[index],
@@ -265,8 +284,9 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                               onTap: () => ref.updateSelectedIndex(-1),
                               borderRadius: BorderRadius.circular(12),
                               child: Chip(
-                                backgroundColor:
-                                    context.colorScheme.primaryContainer,
+                                backgroundColor: context
+                                    .colorScheme.primaryContainer
+                                    .withOpacity(0.7),
                                 label: Text(_chipsList[selectedIndex]),
                               ),
                             ),
@@ -303,36 +323,22 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
               controller: _hotspotLocationController,
               label: 'Location',
               maxLine: 4,
-              icon: InkWell(
-                onTap: () {},
-                child: Icon(
-                  Icons.location_on,
-                  color: context.colorScheme.primary,
-                ),
-              ),
             ),
             verticalMargin16,
-            InkWell(
-              borderRadius: BorderRadius.circular(12),
+            CustomButton(
+              label: 'Save',
               onTap: () {
+                context.read<HotspotBloc>().add(
+                      CreateHotspotEvent(
+                        hotspotModel: HotspotRequestModel(
+                          hotspotType: _hotspotTypeController.text,
+                          hotspotName: _hotspotNameController.text,
+                          hotspotLocation: _hotspotLocationController.text,
+                        ),
+                      ),
+                    );
                 Navigator.pop(context);
               },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: context.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    'Save',
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colorScheme.onPrimary,
-                    ),
-                  ),
-                ),
-              ),
             ),
             verticalMargin48,
           ],

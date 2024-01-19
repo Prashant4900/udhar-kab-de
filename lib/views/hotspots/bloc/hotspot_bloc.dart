@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mobile/models/hotspot_model.dart';
+import 'package:mobile/models/hotspots/hotspot_request_model.dart';
+import 'package:mobile/models/hotspots/hotspot_response_model.dart';
 import 'package:mobile/repositories/hotspot_repository.dart';
 import 'package:mobile/setup.dart';
 
@@ -14,8 +15,11 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
     on<CreateHotspotEvent>(_createHotspot);
     on<GetAllHotspotEvent>(_getAllHotspots);
     on<UpdateHotspotEvent>(_updateHotspot);
+    on<DeleteHotspotEvent>(_deleteHotspot);
   }
+
   final hotspotRepository = getIt<HotspotRepository>();
+
   FutureOr<void> _createHotspot(
     CreateHotspotEvent event,
     Emitter<HotspotState> emit,
@@ -23,8 +27,14 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
     emit(state.copyWith(status: HotspotStatus.loading));
 
     try {
-      await hotspotRepository.createHotspot(event.hotspotModel);
-      emit(state.copyWith(status: HotspotStatus.success));
+      final hotspotModel =
+          await hotspotRepository.createHotspot(event.hotspotModel);
+      emit(
+        state.copyWith(
+          status: HotspotStatus.success,
+          hotspots: [...state.hotspots!, hotspotModel],
+        ),
+      );
     } catch (e) {
       final message = e.toString();
       emit(state.copyWith(status: HotspotStatus.failure, message: message));
@@ -53,6 +63,21 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
     emit(state.copyWith(status: HotspotStatus.loading));
 
     try {} catch (e) {
+      final message = e.toString();
+      emit(state.copyWith(status: HotspotStatus.failure, message: message));
+    }
+  }
+
+  FutureOr<void> _deleteHotspot(
+    DeleteHotspotEvent event,
+    Emitter<HotspotState> emit,
+  ) async {
+    emit(state.copyWith(status: HotspotStatus.loading));
+    try {
+      await hotspotRepository.deleteHotspots(event.hotspotModel);
+      final hotspots = await hotspotRepository.getHotspots();
+      emit(state.copyWith(hotspots: hotspots, status: HotspotStatus.success));
+    } catch (e) {
       final message = e.toString();
       emit(state.copyWith(status: HotspotStatus.failure, message: message));
     }

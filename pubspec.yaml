@@ -40,6 +40,7 @@ dependencies:
   get_it: ^7.6.6
   google_fonts: ^6.1.0
   intl: ^0.19.0
+  lottie: ^3.0.0
   pinput: ^3.0.1
   provider: ^6.1.1
   shared_preferences: ^2.2.2
@@ -63,7 +64,7 @@ flutter_gen:
     flutter_svg: true
     flare_flutter: false
     rive: false
-    lottie: false
+    lottie: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -80,7 +81,7 @@ flutter:
   assets:
     - assets/svg/
     - assets/images/
-    - assets/
+    - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
