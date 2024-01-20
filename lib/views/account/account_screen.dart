@@ -32,49 +32,70 @@ class MyAccountScreen extends StatelessWidget {
       builder: (context, state) {
         return Padding(
           padding: allPadding16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UserCard(state: state),
-              verticalMargin12,
-              SingleRowTile(
-                label: 'Hotspot Areas',
-                icon: const Icon(
-                  Icons.location_on_outlined,
-                  color: Colors.grey,
-                  size: 18,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                UserCard(state: state),
+                verticalMargin12,
+                SingleRowTile(
+                  label: 'Hotspot Areas',
+                  icon: const Icon(
+                    Icons.location_on_outlined,
+                    color: Colors.grey,
+                    size: 18,
+                  ),
+                  onTap: () =>
+                      Navigator.pushNamed(context, MyRoutes.hotspotsScreen),
                 ),
-                onTap: () =>
-                    Navigator.pushNamed(context, MyRoutes.hotspotsScreen),
-              ),
-              verticalMargin12,
-              MultiRowTile(
-                label: 'More',
-                children: [
-                  const MultiRowTileModel(
-                    title: 'About',
-                    icon: Icons.info_outline,
-                  ),
-                  const MultiRowTileModel(
-                    title: 'Feedback',
-                    icon: Icons.edit_outlined,
-                  ),
-                  const MultiRowTileModel(
-                    title: 'Rate Us',
-                    icon: Icons.rate_review_outlined,
-                  ),
-                  const MultiRowTileModel(
-                    title: 'Contact Us',
-                    icon: Icons.mail_outline_rounded,
-                  ),
-                  MultiRowTileModel(
-                    title: 'Logout',
-                    icon: Icons.power_settings_new_outlined,
-                    onTap: () => context.read<AuthBloc>()..add(SignOutEvent()),
-                  ),
-                ],
-              ),
-            ],
+                verticalMargin12,
+                const MultiRowTile(
+                  label: 'Preferences',
+                  children: [
+                    MultiRowTileModel(
+                      title: 'QR Code',
+                      icon: Icons.qr_code,
+                    ),
+                    MultiRowTileModel(
+                      title: 'Notifications',
+                      icon: Icons.notifications_active_outlined,
+                    ),
+                    MultiRowTileModel(
+                      title: 'Passcode',
+                      icon: Icons.lock_outline,
+                    ),
+                  ],
+                ),
+                verticalMargin16,
+                MultiRowTile(
+                  label: 'More',
+                  children: [
+                    const MultiRowTileModel(
+                      title: 'About',
+                      icon: Icons.info_outline,
+                    ),
+                    const MultiRowTileModel(
+                      title: 'Feedback',
+                      icon: Icons.edit_outlined,
+                    ),
+                    const MultiRowTileModel(
+                      title: 'Rate Us',
+                      icon: Icons.rate_review_outlined,
+                    ),
+                    const MultiRowTileModel(
+                      title: 'Contact Us',
+                      icon: Icons.mail_outline_rounded,
+                    ),
+                    MultiRowTileModel(
+                      title: 'Logout',
+                      icon: Icons.power_settings_new_outlined,
+                      onTap: () =>
+                          context.read<AuthBloc>()..add(SignOutEvent()),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -150,7 +171,6 @@ class UserCard extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
-                        // verticalMargin8,
                         Text(
                           (state.user?.email != '' && state.user?.email != null)
                               ? state.user!.email

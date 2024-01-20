@@ -11,7 +11,7 @@ class HotspotRepository {
   final _account = AppWriteClient.account;
   final userRepository = getIt<UserRepository>();
 
-  Future<HotspotResponseModel> createHotspot(
+  Future<HotspotResponseModel?> createHotspot(
     HotspotRequestModel hotspotModel,
   ) async {
     try {
@@ -21,6 +21,25 @@ class HotspotRepository {
         databaseId: AppWriteClient.databaseId,
         collectionId: AppWriteClient.hotspotCollectionId,
         documentId: ID.unique(),
+        data: hotspotModel.copyWith(userID: user.$id).toMap(),
+      );
+
+      return HotspotResponseModel.fromMap(result.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<HotspotResponseModel?> updateHotspot(
+    HotspotRequestModel hotspotModel,
+  ) async {
+    try {
+      final user = await _account.get();
+
+      final result = await _database.createDocument(
+        databaseId: AppWriteClient.databaseId,
+        collectionId: AppWriteClient.hotspotCollectionId,
+        documentId: hotspotModel.id!,
         data: hotspotModel.copyWith(userID: user.$id).toMap(),
       );
 

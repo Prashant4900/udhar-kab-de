@@ -56,6 +56,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           cardTheme: const CardTheme(
+            elevation: 0,
             color: Color(0xFFFFFFFF),
           ),
           textTheme: GoogleFonts.poppinsTextTheme(),

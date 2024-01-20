@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
-import 'package:mobile/models/hotspots/hotspot_request_model.dart';
-import 'package:mobile/models/hotspots/hotspot_response_model.dart';
+import 'package:mobile/gen/assets.gen.dart';
+import 'package:mobile/models/hotspots/hotspot_models.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/hotspots/bloc/hotspot_bloc.dart';
 import 'package:mobile/views/hotspots/provider/hotspot_type_provider.dart';
 import 'package:mobile/widget/body_widget.dart';
 import 'package:mobile/widget/button_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 final _chipsList = <String>[
   'Snacks',
@@ -68,51 +69,94 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                 itemBuilder: (context, index) {
                   final hotspotItem = state.hotspots![index];
                   return Card(
-                    elevation: 0,
                     child: Padding(
-                      padding: verticalPadding12,
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        onTap: () {
-                          createUpdateHotspotsSheet(
-                            context,
-                            // model: HotspotRequestModel(
-                            //   hotspotName: hotspotItem.hotspotName,
-                            //   hotspotLocation: hotspotItem.hotspotLocation,
-                            // ),
-                          );
-                        },
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.redAccent,
+                      padding: horizontalPadding12 + verticalPadding16,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: topPadding4,
+                            child:
+                                getHotspotIcon(hotspotItem.hotspotType ?? ''),
                           ),
-                          onPressed: () {
-                            context.read<HotspotBloc>().add(
-                                  DeleteHotspotEvent(
-                                    hotspotModel: HotspotRequestModel(
-                                      id: hotspotItem.id,
+                          horizontalMargin12,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                hotspotItem.hotspotType ?? '',
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              verticalMargin8,
+                              Text(
+                                hotspotItem.hotspotName ?? '',
+                                style: context.textTheme.bodyMedium,
+                                maxLines: 3,
+                              ),
+                              verticalMargin8,
+                              SizedBox(
+                                width: context.mediaQuery.size.width * 0.77,
+                                child: Text(
+                                  hotspotItem.hotspotLocation ?? '',
+                                  style: context.textTheme.bodyMedium,
+                                  maxLines: 3,
+                                ),
+                              ),
+                              verticalMargin8,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'EDIT',
+                                    style:
+                                        context.textTheme.titleMedium!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: context.colorScheme.primary,
                                     ),
                                   ),
-                                );
-                          },
-                        ),
-                        title: Text(
-                          hotspotItem.id ?? 'fg',
-                          style: context.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
+                                  horizontalMargin16,
+                                  InkWell(
+                                    onTap: () {
+                                      context.read<HotspotBloc>().add(
+                                            DeleteHotspotEvent(
+                                              hotspotModel: HotspotRequestModel(
+                                                id: hotspotItem.id,
+                                              ),
+                                            ),
+                                          );
+                                    },
+                                    child: Text(
+                                      'DELETE',
+                                      style: context.textTheme.titleMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: context.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                  horizontalMargin16,
+                                  InkWell(
+                                    onTap: () {
+                                      Share.share(
+                                        '''Hey! Save this address on Udhar Kab Dega https://play.google.com/store/apps/details?id=news.nerdy.mobile.\n\nName: ${hotspotItem.hotspotName}\n\nAddress: ${hotspotItem.hotspotLocation}''',
+                                      );
+                                    },
+                                    child: Text(
+                                      'SHARE',
+                                      style: context.textTheme.titleMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: context.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          hotspotItem.hotspotLocation!,
-                          style: context.textTheme.bodyMedium,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        ],
                       ),
                     ),
                   );
@@ -328,15 +372,6 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
             CustomButton(
               label: 'Save',
               onTap: () {
-                context.read<HotspotBloc>().add(
-                      CreateHotspotEvent(
-                        hotspotModel: HotspotRequestModel(
-                          hotspotType: _hotspotTypeController.text,
-                          hotspotName: _hotspotNameController.text,
-                          hotspotLocation: _hotspotLocationController.text,
-                        ),
-                      ),
-                    );
                 Navigator.pop(context);
               },
             ),
@@ -345,5 +380,30 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
         );
       },
     );
+  }
+}
+
+Widget getHotspotIcon(String hotspotType) {
+  switch (hotspotType.toLowerCase()) {
+    case 'food':
+      return Assets.svg.food.svg(
+        width: 20,
+      );
+    case 'snacks':
+      return Assets.svg.snacks2.svg(
+        width: 20,
+      );
+    case 'petrol':
+      return Assets.svg.petrol.svg(
+        width: 20,
+      );
+    case 'shopping':
+      return Assets.svg.shopping.svg(
+        width: 20,
+      );
+    default:
+      return Assets.svg.snacks1.svg(
+        width: 20,
+      );
   }
 }

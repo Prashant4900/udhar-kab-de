@@ -27,14 +27,25 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
     emit(state.copyWith(status: HotspotStatus.loading));
 
     try {
-      final hotspotModel =
-          await hotspotRepository.createHotspot(event.hotspotModel);
-      emit(
-        state.copyWith(
-          status: HotspotStatus.success,
-          hotspots: [...state.hotspots!, hotspotModel],
-        ),
-      );
+      final result = await hotspotRepository.createHotspot(event.hotspotModel);
+
+      if (result != null) {
+        final newHotspotList = await hotspotRepository.getHotspots();
+
+        emit(
+          state.copyWith(
+            status: HotspotStatus.success,
+            hotspots: newHotspotList,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: HotspotStatus.success,
+            hotspots: state.hotspots,
+          ),
+        );
+      }
     } catch (e) {
       final message = e.toString();
       emit(state.copyWith(status: HotspotStatus.failure, message: message));
@@ -62,7 +73,27 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
   ) async {
     emit(state.copyWith(status: HotspotStatus.loading));
 
-    try {} catch (e) {
+    try {
+      final result = await hotspotRepository.createHotspot(event.hotspotModel);
+
+      if (result != null) {
+        final newHotspotList = await hotspotRepository.getHotspots();
+
+        emit(
+          state.copyWith(
+            status: HotspotStatus.success,
+            hotspots: newHotspotList,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: HotspotStatus.success,
+            hotspots: state.hotspots,
+          ),
+        );
+      }
+    } catch (e) {
       final message = e.toString();
       emit(state.copyWith(status: HotspotStatus.failure, message: message));
     }

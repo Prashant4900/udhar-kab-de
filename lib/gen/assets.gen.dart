@@ -37,11 +37,27 @@ class $AssetsLottieGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/food.svg
+  SvgGenImage get food => const SvgGenImage('assets/svg/food.svg');
+
   /// File path: assets/svg/google-icon.svg
   SvgGenImage get googleIcon => const SvgGenImage('assets/svg/google-icon.svg');
 
+  /// File path: assets/svg/petrol.svg
+  SvgGenImage get petrol => const SvgGenImage('assets/svg/petrol.svg');
+
+  /// File path: assets/svg/shopping.svg
+  SvgGenImage get shopping => const SvgGenImage('assets/svg/shopping.svg');
+
+  /// File path: assets/svg/snacks1.svg
+  SvgGenImage get snacks1 => const SvgGenImage('assets/svg/snacks1.svg');
+
+  /// File path: assets/svg/snacks2.svg
+  SvgGenImage get snacks2 => const SvgGenImage('assets/svg/snacks2.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [googleIcon];
+  List<SvgGenImage> get values =>
+      [food, googleIcon, petrol, shopping, snacks1, snacks2];
 }
 
 class Assets {
