@@ -5,6 +5,7 @@ class MyRoutes {
   static const accountDetail = '/accountDetail';
   static const splashScreen = '/splash';
   static const hotspotsScreen = '/hotspots';
+  static const addHotspotsScreen = '/addHotspots';
   static const authScreen = '/auth';
   static const otpScreen = '/otp';
   static const phoneAuthScreen = '/phoneAuth';

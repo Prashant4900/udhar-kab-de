@@ -28,9 +28,12 @@ class MyHotSpotsScreen extends StatefulWidget {
 }
 
 class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   late final TextEditingController _hotspotNameController;
   late final TextEditingController _hotspotTypeController;
   late final TextEditingController _hotspotLocationController;
+  int selectedIndex = -1;
 
   @override
   void initState() {
@@ -52,8 +55,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HotspotBloc()..add(GetAllHotspotEvent()),
-      child: BlocConsumer<HotspotBloc, HotspotState>(
-        listener: (context, state) {},
+      child: BlocBuilder<HotspotBloc, HotspotState>(
         builder: (context, state) {
           return BodyWidget(
             isLoading: state.status == HotspotStatus.loading,
@@ -108,12 +110,26 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'EDIT',
-                                    style:
-                                        context.textTheme.titleMedium!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: context.colorScheme.primary,
+                                  InkWell(
+                                    onTap: () async {
+                                      await addHotspotBottomSheet(
+                                        context,
+                                        hotspotResponseModel: hotspotItem,
+                                      ).then((value) {
+                                        if (value == true) {
+                                          context
+                                              .read<HotspotBloc>()
+                                              .add(GetAllHotspotEvent());
+                                        }
+                                      });
+                                    },
+                                    child: Text(
+                                      'EDIT',
+                                      style: context.textTheme.titleMedium!
+                                          .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: context.colorScheme.primary,
+                                      ),
                                     ),
                                   ),
                                   horizontalMargin16,
@@ -163,21 +179,17 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                 },
                 separatorBuilder: (context, index) => verticalMargin8,
               ),
-              floatingActionButton: FloatingActionButton.extended(
-                backgroundColor: context.colorScheme.primary,
-                onPressed: () {
-                  createUpdateHotspotsSheet(context);
-                },
-                label: Text(
-                  'Add Hotspot',
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: context.colorScheme.onPrimary,
-                  ),
-                ),
-                icon: Icon(
-                  Icons.add,
-                  color: context.colorScheme.onPrimary,
+              bottomNavigationBar: Padding(
+                padding: bottomPadding24 + horizontalPadding16,
+                child: CustomButton(
+                  label: 'Add Hotspot',
+                  onTap: () async {
+                    await addHotspotBottomSheet(context).then((value) {
+                      if (value == true) {
+                        context.read<HotspotBloc>().add(GetAllHotspotEvent());
+                      }
+                    });
+                  },
                 ),
               ),
             ),
@@ -187,196 +199,202 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
     );
   }
 
-  Widget textFieldWithLabel({
-    required TextEditingController controller,
-    required String label,
-    Widget? icon,
-    int? maxLine,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: context.textTheme.bodyLarge,
-            ),
-            const Spacer(),
-            icon ?? emptyWidget,
-          ],
-        ),
-        verticalMargin8,
-        Container(
-          decoration: BoxDecoration(
-            color: context.colorScheme.primaryContainer.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              contentPadding:
-                  horizontalPadding12 + verticalPadding8 + verticalPadding2,
-              border: InputBorder.none,
-              hintText: 'Enter $label',
-              suffixIcon: InkWell(
-                onTap: () => controller.clear(),
-                child: const Icon(
-                  CupertinoIcons.clear_thick_circled,
-                  size: 16,
-                ),
-              ),
-            ),
-            maxLines: maxLine,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> createUpdateHotspotsSheet(
+  Future<dynamic> addHotspotBottomSheet(
     BuildContext context, {
-    HotspotResponseModel? model,
-  }) async {
-    await showModalBottomSheet<void>(
+    HotspotResponseModel? hotspotResponseModel,
+  }) {
+    _hotspotNameController.text = hotspotResponseModel?.hotspotName ?? '';
+    _hotspotLocationController.text =
+        hotspotResponseModel?.hotspotLocation ?? '';
+    return showModalBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      builder: (context) {
-        return ListView(
-          shrinkWrap: true,
-          padding: horizontalPadding16,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            verticalMargin32,
-            Row(
-              children: [
-                Text(
-                  'Create Hotspots',
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colorScheme.primary,
-                    fontSize: 20,
-                  ),
-                ),
-                const Spacer(),
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Text(
-                    'Close',
-                    style: context.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colorScheme.error,
-                      fontSize: 18,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return BlocProvider(
+          create: (context) => HotspotBloc(),
+          child: BlocBuilder<HotspotBloc, HotspotState>(
+            builder: (context, state) {
+              return Form(
+                key: _formKey,
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: horizontalPadding16 + bottomPadding48,
+                  children: [
+                    Divider(
+                      thickness: 3,
+                      indent: context.mediaQuery.size.width * 0.4,
+                      endIndent: context.mediaQuery.size.width * 0.4,
+                      color: Colors.black,
                     ),
-                  ),
-                ),
-              ],
-            ),
-            const Divider(),
-            verticalMargin12,
-            Text(
-              'Hotspot type *',
-              style: context.textTheme.bodyLarge,
-            ),
-            verticalMargin12,
-            Consumer<HotspotTypeProvider>(
-              builder: (context, ref, child) {
-                final selectedIndex = ref.selectedIndex;
-                _hotspotLocationController.text = model?.hotspotLocation ?? '';
-                _hotspotNameController.text = model?.hotspotName ?? '';
-                return selectedIndex != 4
-                    ? SizedBox(
-                        height: 50,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: rightPadding12,
-                              child: InkWell(
-                                onTap: () {
-                                  ref.updateSelectedIndex(index);
-                                  _hotspotTypeController.text =
-                                      _chipsList[index];
-                                },
-                                borderRadius: BorderRadius.circular(12),
-                                child: Hero(
-                                  tag: _chipsList[index],
-                                  child: Chip(
-                                    backgroundColor: index == selectedIndex
-                                        ? context.colorScheme.primaryContainer
-                                            .withOpacity(0.7)
-                                        : null,
-                                    label: Text(
-                                      _chipsList[index],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
+                    verticalMargin12,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          hotspotResponseModel?.id == null
+                              ? 'Create Hotspot'
+                              : 'Update Hotspot',
+                          style: context.textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context, false);
                           },
-                          shrinkWrap: true,
-                          itemCount: _chipsList.length,
-                          scrollDirection: Axis.horizontal,
-                        ),
-                      )
-                    : Hero(
-                        tag: _chipsList[selectedIndex],
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () => ref.updateSelectedIndex(-1),
-                              borderRadius: BorderRadius.circular(12),
-                              child: Chip(
-                                backgroundColor: context
-                                    .colorScheme.primaryContainer
-                                    .withOpacity(0.7),
-                                label: Text(_chipsList[selectedIndex]),
-                              ),
+                          child: Text(
+                            'Close',
+                            style: context.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                              fontSize: 18,
                             ),
-                            horizontalMargin12,
-                            Expanded(
-                              child: TextField(
-                                controller: _hotspotTypeController,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter Hotspot Type',
-                                  suffixIcon: InkWell(
-                                    onTap: () {
-                                      _hotspotTypeController.clear();
-                                      ref.updateSelectedIndex(-1);
-                                    },
-                                    child: const Icon(
-                                      CupertinoIcons.clear_thick_circled,
+                          ),
+                        ),
+                      ],
+                    ),
+                    verticalMargin24,
+                    Text(
+                      'Hotspot Type *',
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    verticalMargin12,
+                    Consumer<HotspotTypeProvider>(
+                      builder: (context, ref, child) {
+                        final selectedIndex = ref.selectedIndex;
+                        return selectedIndex != 4
+                            ? Wrap(
+                                children: List.generate(
+                                  _chipsList.length,
+                                  (index) => Padding(
+                                    padding: rightPadding12,
+                                    child: InkWell(
+                                      onTap: () {
+                                        ref.updateSelectedIndex(index);
+                                        _hotspotTypeController.text =
+                                            _chipsList[index];
+                                      },
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Hero(
+                                        tag: _chipsList[index],
+                                        child: Chip(
+                                          backgroundColor:
+                                              index == selectedIndex
+                                                  ? context.colorScheme
+                                                      .primaryContainer
+                                                      .withOpacity(0.7)
+                                                  : null,
+                                          label: Text(
+                                            _chipsList[index],
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-              },
-            ),
-            verticalMargin16,
-            textFieldWithLabel(
-              controller: _hotspotNameController,
-              label: 'Hotspot Name',
-            ),
-            verticalMargin16,
-            textFieldWithLabel(
-              controller: _hotspotLocationController,
-              label: 'Location',
-              maxLine: 4,
-            ),
-            verticalMargin16,
-            CustomButton(
-              label: 'Save',
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            verticalMargin48,
-          ],
+                              )
+                            : Hero(
+                                tag: _chipsList[selectedIndex],
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () => ref.updateSelectedIndex(-1),
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Chip(
+                                        backgroundColor: context
+                                            .colorScheme.primaryContainer
+                                            .withOpacity(0.7),
+                                        label: Text(_chipsList[selectedIndex]),
+                                      ),
+                                    ),
+                                    horizontalMargin12,
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _hotspotTypeController,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter Hotspot Type',
+                                          suffixIcon: InkWell(
+                                            onTap: () {
+                                              _hotspotTypeController.clear();
+                                              ref.updateSelectedIndex(-1);
+                                            },
+                                            child: const Icon(
+                                              CupertinoIcons
+                                                  .clear_thick_circled,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                      },
+                    ),
+                    verticalMargin16,
+                    Text(
+                      'Hotspot Name *',
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _hotspotNameController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter Name',
+                      ),
+                    ),
+                    verticalMargin24,
+                    Text(
+                      'Hotspot Location *',
+                      style: context.textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _hotspotLocationController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter Location',
+                      ),
+                    ),
+                    verticalMargin48 + verticalMargin48 + verticalMargin48,
+                    CustomButton(
+                      label: hotspotResponseModel?.id == null
+                          ? 'Create Hotspot'
+                          : 'Update Hotspot',
+                      onTap: () {
+                        context.read<HotspotBloc>().add(
+                              hotspotResponseModel?.id == null
+                                  ? const CreateHotspotEvent(
+                                      hotspotModel: HotspotRequestModel(
+                                        hotspotType: 'Type',
+                                        hotspotName: 'Name',
+                                        hotspotLocation: 'Location',
+                                      ),
+                                    )
+                                  : UpdateHotspotEvent(
+                                      hotspotModel: HotspotRequestModel(
+                                        id: hotspotResponseModel?.id,
+                                        hotspotType: 'Type 2',
+                                        hotspotName: 'Name 1',
+                                        hotspotLocation: 'Location 1',
+                                      ),
+                                    ),
+                            );
+                        Navigator.pop(context, true);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );

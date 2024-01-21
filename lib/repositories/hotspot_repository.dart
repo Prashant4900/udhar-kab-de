@@ -1,6 +1,5 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:mobile/models/hotspots/hotspot_request_model.dart';
-import 'package:mobile/models/hotspots/hotspot_response_model.dart';
+import 'package:mobile/models/hotspots/hotspot_models.dart';
 import 'package:mobile/models/user_model.dart';
 import 'package:mobile/repositories/user_repository.dart';
 import 'package:mobile/service/app_client.dart';
@@ -36,7 +35,7 @@ class HotspotRepository {
     try {
       final user = await _account.get();
 
-      final result = await _database.createDocument(
+      final result = await _database.updateDocument(
         databaseId: AppWriteClient.databaseId,
         collectionId: AppWriteClient.hotspotCollectionId,
         documentId: hotspotModel.id!,

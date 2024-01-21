@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -74,11 +75,10 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
     emit(state.copyWith(status: HotspotStatus.loading));
 
     try {
-      final result = await hotspotRepository.createHotspot(event.hotspotModel);
-
+      final result = await hotspotRepository.updateHotspot(event.hotspotModel);
       if (result != null) {
         final newHotspotList = await hotspotRepository.getHotspots();
-
+        log(newHotspotList.toString());
         emit(
           state.copyWith(
             status: HotspotStatus.success,

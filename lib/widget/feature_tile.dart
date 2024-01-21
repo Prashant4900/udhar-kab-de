@@ -101,7 +101,6 @@ class MultiRowTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
       margin: EdgeInsets.zero,
       child: Column(
         children: [
