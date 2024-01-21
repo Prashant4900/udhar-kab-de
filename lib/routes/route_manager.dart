@@ -7,7 +7,6 @@ import 'package:mobile/views/auth/otp_screen.dart';
 import 'package:mobile/views/auth/phone_auth_screen.dart';
 import 'package:mobile/views/dashboard/dashboard.dart';
 import 'package:mobile/views/friends/add_friend_screen.dart';
-import 'package:mobile/views/hotspots/add_hotspot_screen.dart';
 import 'package:mobile/views/hotspots/hotspots_screen.dart';
 import 'package:mobile/views/splash/splash_screen.dart';
 
@@ -24,11 +23,6 @@ class RouteManager {
       case MyRoutes.splashScreen:
         return MaterialPageRoute(
           builder: (_) => const MySplashScreen(),
-        );
-
-      case MyRoutes.addHotspotsScreen:
-        return MaterialPageRoute(
-          builder: (_) => const MyAddHotspotScreen(),
         );
       case MyRoutes.accountDetail:
         return MaterialPageRoute(
