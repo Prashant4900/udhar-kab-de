@@ -55,7 +55,8 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HotspotBloc()..add(GetAllHotspotEvent()),
-      child: BlocBuilder<HotspotBloc, HotspotState>(
+      child: BlocConsumer<HotspotBloc, HotspotState>(
+        listener: (context, state) {},
         builder: (context, state) {
           return BodyWidget(
             isLoading: state.status == HotspotStatus.loading,

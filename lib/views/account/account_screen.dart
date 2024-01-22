@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
@@ -113,6 +115,7 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('${state.user}');
     return Container(
       height: 150,
       decoration: BoxDecoration(
@@ -195,7 +198,7 @@ class UserCard extends StatelessWidget {
                 children: [
                   Text(
                     'Joined At: '
-                    '${formatDate(state.user!.registration)}',
+                    '${formatDate(state.user?.registration ?? '')}',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Colors.white,
                         ),

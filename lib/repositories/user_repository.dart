@@ -8,7 +8,6 @@ class UserRepository {
 
   Future<UserModel> getUserData() async {
     try {
-      //TODO: need to handle first time login condition
       final user = await _account.get();
 
       final userDoc = await _database.getDocument(
@@ -24,7 +23,7 @@ class UserRepository {
     }
   }
 
-  Future<UserModel> insertUserData() async {
+  Future<UserModel> insertUser() async {
     try {
       final user = await _account.get();
       final model = UserModel.fromMap(user.toMap());
@@ -41,9 +40,19 @@ class UserRepository {
     }
   }
 
-  Future<void> updateUserData() async {
+  Future<UserModel> updateUser() async {
     try {
-      await _account.get();
+      final user = await _account.get();
+      final model = UserModel.fromMap(user.toMap());
+
+      final document = await _database.updateDocument(
+        databaseId: AppWriteClient.databaseId,
+        collectionId: AppWriteClient.userCollectionId,
+        documentId: user.$id,
+        data: model.toMap(),
+      );
+
+      return UserModel.fromMap(document.data);
     } catch (e) {
       throw Exception(e);
     }

@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 String formatDate(String isoDate) {
+  if (isoDate.isEmpty) return '';
   // Parse the ISO date time string
   final dateTime = DateTime.parse(isoDate);
 

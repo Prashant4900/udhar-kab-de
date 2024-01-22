@@ -7,7 +7,7 @@ final getIt = GetIt.instance;
 
 Future<void> setup() async {
   getIt
-    ..registerSingleton<AuthRepository>(AuthRepository())
     ..registerSingleton<UserRepository>(UserRepository())
+    ..registerSingleton<AuthRepository>(AuthRepository())
     ..registerSingleton<HotspotRepository>(HotspotRepository());
 }

@@ -9,8 +9,6 @@ class UserModel extends Equatable {
     this.permissions,
     this.name,
     this.phone,
-    this.createAt,
-    this.updateAt,
     this.emailVerification,
     this.phoneVerification,
     this.status,
@@ -31,12 +29,10 @@ class UserModel extends Equatable {
   factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
         name: json['name'] as String?,
         phone: json['phone'] as String?,
-        createAt: json['createAt'] as String?,
-        updateAt: json['updateAt'] as String?,
         emailVerification: json['emailVerification'] as bool?,
         phoneVerification: json['phoneVerification'] as bool?,
         status: json['status'] as bool?,
-        registrationDate: json['registrationDate'] as String?,
+        registrationDate: json['registration'] as String?,
         accessedAt: json['accessedAt'] as String?,
         email: json['email'] as String?,
         id: json[r'$id'] as String?,
@@ -50,14 +46,12 @@ class UserModel extends Equatable {
                 )
                 .toList() ??
             [],
-        // permissions: List<String>.from(json['\$permissions'] ?? []),
         databaseId: json[r'$databaseId'] as String?,
         collectionId: json[r'$collectionId'] as String?,
       );
+
   final String? name;
   final String? phone;
-  final String? createAt;
-  final String? updateAt;
   final bool? emailVerification;
   final bool? phoneVerification;
   final bool? status;
@@ -77,28 +71,19 @@ class UserModel extends Equatable {
   Map<String, dynamic> toMap() => {
         'name': name,
         'phone': phone,
-        'createAt': createAt,
-        'updateAt': updateAt,
+        'updatedAt': updatedAt,
         'emailVerification': emailVerification,
         'phoneVerification': phoneVerification,
         'status': status,
         'registrationDate': registrationDate,
         'accessedAt': accessedAt,
         'email': email,
-        r'$id': id,
-        r'$createdAt': createdAt,
-        r'$updatedAt': updatedAt,
         'hotspot': hotspot!.map((e) => e.toMap()).toList(),
-        r'$permissions': permissions,
-        r'$databaseId': databaseId,
-        r'$collectionId': collectionId,
       };
 
   UserModel copyWith({
     String? name,
     String? phone,
-    String? createAt,
-    String? updateAt,
     bool? emailVerification,
     bool? phoneVerification,
     bool? status,
@@ -116,8 +101,6 @@ class UserModel extends Equatable {
     return UserModel(
       name: name ?? this.name,
       phone: phone ?? this.phone,
-      createAt: createAt ?? this.createAt,
-      updateAt: updateAt ?? this.updateAt,
       emailVerification: emailVerification ?? this.emailVerification,
       phoneVerification: phoneVerification ?? this.phoneVerification,
       status: status ?? this.status,
@@ -139,8 +122,6 @@ class UserModel extends Equatable {
     return [
       name,
       phone,
-      createAt,
-      updateAt,
       emailVerification,
       phoneVerification,
       status,
@@ -162,8 +143,6 @@ class UserModel extends Equatable {
     return 'UserModel {'
         ' name: $name,'
         ' phone: $phone,'
-        ' createAt: $createAt,'
-        ' updateAt: $updateAt,'
         ' emailVerification: $emailVerification,'
         ' phoneVerification: $phoneVerification,'
         ' status: $status,'
