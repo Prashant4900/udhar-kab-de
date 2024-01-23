@@ -29,10 +29,8 @@ class HotspotBloc extends Bloc<HotspotEvent, HotspotState> {
 
     try {
       final result = await hotspotRepository.createHotspot(event.hotspotModel);
-
       if (result != null) {
         final newHotspotList = await hotspotRepository.getHotspots();
-
         emit(
           state.copyWith(
             status: HotspotStatus.success,

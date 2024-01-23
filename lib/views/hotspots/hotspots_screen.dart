@@ -9,6 +9,7 @@ import 'package:mobile/views/hotspots/bloc/hotspot_bloc.dart';
 import 'package:mobile/views/hotspots/provider/hotspot_type_provider.dart';
 import 'package:mobile/widget/body_widget.dart';
 import 'package:mobile/widget/button_widget.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -55,8 +56,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HotspotBloc()..add(GetAllHotspotEvent()),
-      child: BlocConsumer<HotspotBloc, HotspotState>(
-        listener: (context, state) {},
+      child: BlocBuilder<HotspotBloc, HotspotState>(
         builder: (context, state) {
           return BodyWidget(
             isLoading: state.status == HotspotStatus.loading,
@@ -240,7 +240,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                               : 'Update Hotspot',
                           style: context.textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 18,
                           ),
                         ),
                         InkWell(
@@ -252,7 +252,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                             style: context.textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.red,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -369,27 +369,30 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                       label: hotspotResponseModel?.id == null
                           ? 'Create Hotspot'
                           : 'Update Hotspot',
-                      onTap: () {
-                        context.read<HotspotBloc>().add(
-                              hotspotResponseModel?.id == null
-                                  ? const CreateHotspotEvent(
-                                      hotspotModel: HotspotRequestModel(
-                                        hotspotType: 'Type',
-                                        hotspotName: 'Name',
-                                        hotspotLocation: 'Location',
-                                      ),
-                                    )
-                                  : UpdateHotspotEvent(
-                                      hotspotModel: HotspotRequestModel(
-                                        id: hotspotResponseModel?.id,
-                                        hotspotType: 'Type 2',
-                                        hotspotName: 'Name 1',
-                                        hotspotLocation: 'Location 1',
-                                      ),
-                                    ),
-                            );
-                        Navigator.pop(context, true);
-                      },
+                      onTap: _hotspotTypeController.length > 3 ||
+                              _hotspotNameController.length > 3
+                          ? () {
+                              context.read<HotspotBloc>().add(
+                                    hotspotResponseModel?.id == null
+                                        ? const CreateHotspotEvent(
+                                            hotspotModel: HotspotRequestModel(
+                                              hotspotType: 'Type',
+                                              hotspotName: 'Name',
+                                              hotspotLocation: 'Location',
+                                            ),
+                                          )
+                                        : UpdateHotspotEvent(
+                                            hotspotModel: HotspotRequestModel(
+                                              id: hotspotResponseModel?.id,
+                                              hotspotType: 'Type 2',
+                                              hotspotName: 'Name 1',
+                                              hotspotLocation: 'Location 1',
+                                            ),
+                                          ),
+                                  );
+                              Navigator.pop(context, true);
+                            }
+                          : null,
                     ),
                   ],
                 ),

@@ -37,6 +37,10 @@ class $AssetsLottieGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/find-friends.svg
+  SvgGenImage get findFriends =>
+      const SvgGenImage('assets/svg/find-friends.svg');
+
   /// File path: assets/svg/food.svg
   SvgGenImage get food => const SvgGenImage('assets/svg/food.svg');
 
@@ -57,7 +61,7 @@ class $AssetsSvgGen {
 
   /// List of all assets
   List<SvgGenImage> get values =>
-      [food, googleIcon, petrol, shopping, snacks1, snacks2];
+      [findFriends, food, googleIcon, petrol, shopping, snacks1, snacks2];
 }
 
 class Assets {
