@@ -1,7 +1,5 @@
 import 'dart:developer';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 part 'helper.dart';
 part 'keys.dart';
 

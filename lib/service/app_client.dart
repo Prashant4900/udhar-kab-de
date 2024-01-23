@@ -11,4 +11,10 @@ class AppWriteClient {
   static final database = Databases(_client);
 
   static final account = Account(_client);
+
+  static const databaseId = '65a43508726d50a4e9ea';
+
+  static const userCollectionId = '65a43518a7b432418732';
+
+  static const hotspotCollectionId = '65a8fe72c7e5968b8031';
 }

@@ -1,21 +1,34 @@
-import 'package:flutter/cupertino.dart';
-import 'package:mobile/constants/commons.dart';
+import 'package:flutter/material.dart';
+import 'package:mobile/gen/assets.gen.dart';
 
 class BodyWidget extends StatelessWidget {
   const BodyWidget({
     required this.child,
     super.key,
-    this.padding,
+    this.isLoading = false,
   });
 
   final Widget child;
-  final EdgeInsets? padding;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding ?? allPadding16,
-      child: child,
+    return IgnorePointer(
+      ignoring: isLoading,
+      child: Stack(
+        children: [
+          child,
+          if (isLoading)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.grey.withOpacity(.5),
+              child: Center(
+                child: Assets.lottie.loading.lottie(),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

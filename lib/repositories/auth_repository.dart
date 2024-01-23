@@ -2,12 +2,15 @@ import 'dart:developer';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:mobile/repositories/user_repository.dart';
 import 'package:mobile/service/app_client.dart';
+import 'package:mobile/setup.dart';
 import 'package:mobile/utilities/share_pref/app_prefs.dart';
 
 class AuthRepository {
   final _account = AppWriteClient.account;
   final _database = AppWriteClient.database;
+  final _userRepository = getIt<UserRepository>();
 
   Future<User> getCurrentSessionUser() async {
     try {
@@ -34,28 +37,6 @@ class AuthRepository {
     }
   }
 
-  Future<dynamic> getUserPref(AppPrefKey key) async {
-    try {
-      final result = await _account.getPrefs();
-      log('result: ${result.data['afs']}');
-      final value = result.data[key.name];
-      if (value != null) {
-        return value;
-      }
-      throw Exception('Value not found!');
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
-  Future<void> setUserPref(Map<dynamic, dynamic> prefs) async {
-    try {
-      await _account.updatePrefs(prefs: prefs);
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
   Future<String> initiatePhoneAuth(String phone) async {
     try {
       final sessionToken = await _account.createPhoneSession(
@@ -69,7 +50,7 @@ class AuthRepository {
     }
   }
 
-  Future<String> validateOTP(String userId, String otp) async {
+  Future<User> validateOTP(String userId, String otp) async {
     try {
       final session = await _account.updatePhoneSession(
         userId: userId,
@@ -77,74 +58,30 @@ class AuthRepository {
       );
       log('session: ${session.userId}');
       final user = await getCurrentSessionUser();
+
       await insertOrUpdateUser(user);
       await AppPrefHelper.setUserID(user.$id);
-      return session.userId;
+      return user;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<bool> insertOrUpdateUser(User user) async {
+  Future<void> insertOrUpdateUser(User user) async {
     try {
-      Document result;
-
       final documents = await _database.listDocuments(
-        databaseId: '65a43508726d50a4e9ea',
-        collectionId: '65a43518a7b432418732',
+        databaseId: AppWriteClient.databaseId,
+        collectionId: AppWriteClient.userCollectionId,
         queries: [
-          Query.equal('userId', user.$id),
+          Query.equal(r'$id', user.$id),
         ],
       );
 
       if (documents.total > 0) {
-        final documentID = documents.documents.first.$id;
-
-        result = await _database.updateDocument(
-          databaseId: '65a43508726d50a4e9ea',
-          collectionId: '65a43518a7b432418732',
-          documentId: documentID,
-          data: {
-            'userId': user.$id,
-            'name': user.name.isEmpty ? null : user.name,
-            'phone': user.phone.isEmpty ? null : user.phone,
-            'phoneVerification': user.phoneVerification,
-            'email': user.email.isEmpty ? null : user.email,
-            'emailVerification': user.emailVerification,
-            'status': user.status,
-            'updateAt': user.$updatedAt,
-            'createAt': user.$createdAt,
-            'registrationDate': user.registration,
-            'accessedAt': user.accessedAt,
-            'passwordUpdate': user.passwordUpdate,
-          },
-        );
+        await _userRepository.updateUser();
       } else {
-        result = await _database.createDocument(
-          databaseId: '65a43508726d50a4e9ea',
-          collectionId: '65a43518a7b432418732',
-          documentId: ID.unique(),
-          data: {
-            'userId': user.$id,
-            'name': user.name.isEmpty ? null : user.name,
-            'phone': user.phone.isEmpty ? null : user.phone,
-            'phoneVerification': user.phoneVerification,
-            'email': user.email.isEmpty ? null : user.email,
-            'emailVerification': user.emailVerification,
-            'status': user.status,
-            'updateAt': user.$updatedAt,
-            'createAt': user.$createdAt,
-            'registrationDate': user.registration,
-            'accessedAt': user.accessedAt,
-            'passwordUpdate': user.passwordUpdate,
-          },
-        );
+        await _userRepository.insertUser();
       }
-
-      if (result.$collectionId != '') {
-        return true;
-      }
-      return false;
     } catch (e) {
       throw Exception(e);
     }
@@ -153,7 +90,7 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       await _account.deleteSession(sessionId: 'current');
-      await AppPrefHelper.deleteUserID();
+      await AppPref.clear();
     } catch (e) {
       throw Exception(e);
     }

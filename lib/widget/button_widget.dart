@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/utils/extensions.dart';
 
-class AuthButton extends StatelessWidget {
-  const AuthButton({
+class CustomButton extends StatelessWidget {
+  const CustomButton({
     required this.label,
     this.onTap,
     this.icon,
@@ -44,6 +44,41 @@ class AuthButton extends StatelessWidget {
                   ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MiniCustomButton extends StatelessWidget {
+  const MiniCustomButton({
+    required this.label,
+    this.onTap,
+    super.key,
+  });
+
+  final VoidCallback? onTap;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: onTap == null ? Colors.grey : context.colorScheme.primary,
+        ),
+        child: Padding(
+          padding: verticalPadding12 + horizontalPadding24,
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
         ),
       ),
     );

@@ -19,6 +19,7 @@ class AuthState extends Equatable {
     this.isOTPResend = false,
     this.accountStatus,
     this.userStatus,
+    this.userModel,
   });
 
   factory AuthState.initial() =>
@@ -30,6 +31,7 @@ class AuthState extends Equatable {
   final String? message;
   final String? userId;
   final bool isOTPResend;
+  final UserModel? userModel;
 
   AuthState copyWith({
     AccountStatus? accountStatus,
@@ -38,6 +40,7 @@ class AuthState extends Equatable {
     String? userId,
     bool isOTPResend = false,
     UserStatus? userStatus,
+    UserModel? userModel,
   }) {
     return AuthState(
       accountStatus: accountStatus ?? this.accountStatus,
@@ -46,6 +49,7 @@ class AuthState extends Equatable {
       userId: userId ?? this.userId,
       isOTPResend: isOTPResend,
       userStatus: userStatus ?? this.userStatus,
+      userModel: userModel ?? userModel,
     );
   }
 
@@ -57,5 +61,6 @@ class AuthState extends Equatable {
         userId,
         isOTPResend,
         userStatus,
+        userModel,
       ];
 }

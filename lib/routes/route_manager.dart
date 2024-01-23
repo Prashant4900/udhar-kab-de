@@ -50,29 +50,8 @@ class RouteManager {
         return MaterialPageRoute(builder: (_) => const MyAccountScreen());
 
       case MyRoutes.addFriendScreen:
-        return PageRouteBuilder<dynamic>(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const MyAddFriendScreen(),
-          transitionDuration: const Duration(
-            // seconds: 1,
-            milliseconds: 500,
-          ), // Set your desired duration
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1, 1);
-            const end = Offset.zero;
-            const curve = Curves.easeInOut;
+        return MaterialPageRoute(builder: (_) => const MyAddFriendScreen());
 
-            final tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-            final offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        );
       case MyRoutes.authScreen:
         return PageRouteBuilder<dynamic>(
           pageBuilder: (context, animation, secondaryAnimation) =>

@@ -3,7 +3,10 @@
         "appwrite",
         "Bezier",
         "Dega",
+        "hostpot",
+        "Hotspot",
         "hotspots",
+        "Passcode",
         "pinput",
         "prefs",
         "Reclip",
@@ -12,5 +15,6 @@
         "मुझे",
         "मेरा",
         "वापस"
-    ]
+    ],
+    "svg.preview.background": "white"
 }

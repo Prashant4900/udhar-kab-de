@@ -172,7 +172,7 @@ class _MyOTPScreenState extends State<MyOTPScreen> {
                 if (state.accountStatus == AccountStatus.loading)
                   const Center(child: CircularProgressIndicator.adaptive())
                 else
-                  AuthButton(
+                  CustomButton(
                     onTap: pinController.text.length != 6
                         ? null
                         : () {

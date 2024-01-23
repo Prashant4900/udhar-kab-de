@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appwrite/models.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mobile/models/user_model.dart';
 import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/setup.dart';
 
@@ -112,24 +113,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(state.copyWith(accountStatus: AccountStatus.loading));
     try {
-      final userId = await authRepository.validateOTP(state.userId!, event.otp);
-      if (userId == state.userId) {
-        /// Here userId is of validateOTP and state.userId
-        /// is of Phone number sending
-        emit(
-          state.copyWith(
-            accountStatus: AccountStatus.accountVerified,
-            userId: userId,
-          ),
-        );
-      } else {
-        emit(
-          state.copyWith(
-            accountStatus: AccountStatus.failure,
-            message: 'Something went wrong',
-          ),
-        );
-      }
+      final user = await authRepository.validateOTP(state.userId!, event.otp);
+      emit(
+        state.copyWith(
+          accountStatus: AccountStatus.accountVerified,
+          user: user,
+        ),
+      );
     } catch (e) {
       final message = e.toString();
       emit(
