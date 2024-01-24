@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
-import 'package:mobile/constants/tags.dart';
 import 'package:mobile/routes/route_manager.dart';
-import 'package:mobile/utils/extensions.dart';
+import 'package:mobile/theme/theme_manager.dart';
 
 class MyFriendScreen extends StatelessWidget {
   const MyFriendScreen({super.key});
@@ -15,31 +14,17 @@ class MyFriendScreen extends StatelessWidget {
         child: Center(
           child: Text(
             'There is no friends in your account yet. Try adding new Friend?',
-            style: context.textTheme.bodyLarge,
+            style: context.bodyStyle,
             textAlign: TextAlign.center,
           ),
         ),
       ),
-      floatingActionButton: TextButton.icon(
-        style: ButtonStyle(
-          backgroundColor:
-              MaterialStatePropertyAll(context.colorScheme.primary),
-          foregroundColor:
-              MaterialStatePropertyAll(context.colorScheme.onPrimary),
-          textStyle: MaterialStatePropertyAll(
-            context.textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, MyRoutes.addFriendScreen);
         },
+        label: const Text('Add Friend'),
         icon: const Icon(Icons.add),
-        label: const Hero(
-          tag: HeroTags.addFriend,
-          child: Text('Add Friend'),
-        ),
       ),
     );
   }

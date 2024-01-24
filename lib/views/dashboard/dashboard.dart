@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/constants/tags.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/account/account_screen.dart';
 import 'package:mobile/views/activity/activity_screen.dart';
@@ -47,8 +48,9 @@ class _MyDashboardState extends State<MyDashboard> {
             selectedIndex == 0
                 ? 'Udhar Kab dega'
                 : navItems[selectedIndex]['label']! as String,
-            style: context.textTheme.titleLarge!.copyWith(
+            style: context.titleStyle.copyWith(
               fontWeight: FontWeight.bold,
+              fontSize: 22,
             ),
           ),
         ),
@@ -62,36 +64,35 @@ class _MyDashboardState extends State<MyDashboard> {
           MyAccountScreen(),
         ],
       ),
-      bottomNavigationBar: SizedBox(
-        height: kToolbarHeight + 20,
-        child: Padding(
-          padding: bottomPadding8,
-          child: Column(
-            children: [
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  for (int index = 0; index < navItems.length; index++) ...[
-                    emptyWidget,
-                    InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                        });
-                      },
-                      child: BottomNavItem(
-                        index: index,
-                        selected: selectedIndex == index,
-                      ),
-                    ),
-                  ],
-                  emptyWidget,
-                ],
+      bottomNavigationBar: Container(
+        height: 56,
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            for (int index = 0; index < navItems.length; index++) ...[
+              emptyWidget,
+              InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
+                child: BottomNavItem(
+                  index: index,
+                  selected: selectedIndex == index,
+                ),
               ),
             ],
-          ),
+            emptyWidget,
+          ],
         ),
       ),
     );
@@ -117,8 +118,16 @@ class BottomNavItem extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(navItems[index]['icon']! as IconData),
-          Text(navItems[index]['label']! as String),
+          SizedBox.square(
+            dimension: 32,
+            child: Icon(navItems[index]['icon']! as IconData),
+          ),
+          Text(
+            navItems[index]['label']! as String,
+            style: context.captionStyle.copyWith(
+              fontSize: 11,
+            ),
+          ),
         ],
       ),
     );

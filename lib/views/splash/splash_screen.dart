@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/tags.dart';
 import 'package:mobile/routes/route_manager.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utilities/share_pref/app_prefs.dart';
 import 'package:mobile/views/auth/bloc/auth_bloc.dart';
 import 'package:mobile/widget/text_widgets.dart';
@@ -35,10 +36,10 @@ class MySplashScreen extends StatelessWidget {
             tag: HeroTags.fullTextLogo,
             child: ShiningText(
               text: 'Udhar Kab Dega',
-              textStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+              textStyle: context.titleStyle.copyWith(
+                color: Theme.of(context).primaryColor,
+                // fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

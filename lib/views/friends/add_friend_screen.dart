@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/gen/assets.gen.dart';
-import 'package:mobile/utils/extensions.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/views/friends/bloc/friends_bloc.dart';
 import 'package:mobile/widget/body_widget.dart';
 import 'package:mobile/widget/button_widget.dart';
@@ -44,18 +44,19 @@ class _MyAddFriendScreenState extends State<MyAddFriendScreen> {
           }
         },
         builder: (context, state) {
-          print(state.contactList);
           return BodyWidget(
             isLoading: state.status == FriendStatus.loading,
             child: Scaffold(
               appBar: AppBar(
                 title: TextField(
                   controller: _controller,
-                  decoration: const InputDecoration.collapsed(
+                  decoration: InputDecoration.collapsed(
                     hintText: 'Enter name, email or phone #',
-                    hintStyle: TextStyle(fontSize: 18),
+                    hintStyle: context.bodyStyle.copyWith(
+                      color: Colors.grey,
+                    ),
                   ),
-                  style: const TextStyle(fontSize: 18),
+                  style: context.bodyStyle,
                 ),
               ),
               body: SizedBox.expand(
@@ -97,18 +98,18 @@ class AllowContactAccessWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Assets.svg.findFriends.svg(
-          width: MediaQuery.sizeOf(context).width * .5,
+          width: MediaQuery.sizeOf(context).width * .4,
         ),
-        verticalMargin24,
+        verticalMargin32,
         SizedBox(
           width: MediaQuery.sizeOf(context).width * .8,
           child: Text(
             '''Allow Udhar kab Dega to access your contact to add people faster.''',
-            style: context.textTheme.bodyLarge,
+            style: context.bodyStyle,
             textAlign: TextAlign.center,
           ),
         ),
-        verticalMargin24,
+        verticalMargin32,
         MiniCustomButton(
           label: 'Allow contact access',
           onTap: () {

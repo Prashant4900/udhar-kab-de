@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 
 class CustomButton extends StatelessWidget {
@@ -22,7 +23,7 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
-        height: kToolbarHeight,
+        height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: onTap == null
@@ -38,10 +39,9 @@ class CustomButton extends StatelessWidget {
             ],
             Text(
               label,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: context.buttonMediumStyle.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
           ],
         ),
@@ -74,10 +74,9 @@ class MiniCustomButton extends StatelessWidget {
           padding: verticalPadding12 + horizontalPadding24,
           child: Text(
             label,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
+            style: context.buttonMediumStyle.copyWith(
+              color: context.colorScheme.onPrimary,
+            ),
           ),
         ),
       ),

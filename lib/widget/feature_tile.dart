@@ -1,40 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utils/extensions.dart';
-
-class FeatureTile extends StatelessWidget {
-  const FeatureTile({
-    required this.title,
-    required this.icon,
-    this.color,
-    this.onTap,
-    super.key,
-  });
-
-  final String title;
-  final IconData icon;
-  final Color? color;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      onTap: onTap,
-      title: Text(
-        title,
-        style: context.textTheme.bodyLarge!.copyWith(
-          fontWeight: FontWeight.w500,
-          color: color,
-        ),
-      ),
-      leading: Icon(
-        icon,
-        color: color ?? context.colorScheme.onPrimaryContainer,
-      ),
-    );
-  }
-}
 
 class SingleRowTile extends StatelessWidget {
   const SingleRowTile({
@@ -58,27 +25,26 @@ class SingleRowTile extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: horizontalPadding12 + verticalPadding12,
+          padding: horizontalPadding12 + verticalPadding10,
           child: Row(
             children: [
               CircleAvatar(
                 backgroundColor: Colors.grey.shade100,
-                radius: 16,
+                radius: 14,
                 child: icon,
               ),
               horizontalMargin12,
               Text(
                 label,
-                style: context.textTheme.bodyLarge!.copyWith(
+                style: context.bodyMediumStyle.copyWith(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
-                  fontSize: 18,
                 ),
               ),
               const Spacer(),
               const Icon(
                 Icons.arrow_forward_ios,
-                size: 16,
+                size: 14,
               ),
             ],
           ),
@@ -104,9 +70,9 @@ class MultiRowTile extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: Column(
         children: [
-          verticalMargin16,
+          verticalMargin12,
           SizedBox(
-            height: 28,
+            height: 20,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -117,49 +83,47 @@ class MultiRowTile extends StatelessWidget {
                 horizontalMargin4,
                 Text(
                   label,
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontSize: 18,
+                  style: context.bodyBoldStyle.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
-          verticalMargin16,
+          verticalMargin8,
           ListView.separated(
             itemCount: children.length,
             shrinkWrap: true,
-            padding: horizontalPadding16 + bottomPadding16,
+            padding: horizontalPadding12 + bottomPadding16,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: children[index].onTap,
                 child: Padding(
-                  padding: topPadding12,
+                  padding: topPadding10,
                   child: Row(
                     children: [
                       CircleAvatar(
-                        radius: 16,
+                        radius: 14,
                         backgroundColor: Colors.grey.shade100,
                         child: Icon(
                           children[index].icon,
                           color: Colors.grey,
-                          size: 18,
+                          size: 16,
                         ),
                       ),
                       horizontalMargin16,
                       Text(
                         children[index].title,
-                        style: context.textTheme.bodyLarge!.copyWith(
+                        style: context.subtitleMediumStyle.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.black,
-                          fontSize: 18,
                         ),
                       ),
                       const Spacer(),
                       const Icon(
                         Icons.arrow_forward_ios,
-                        size: 16,
+                        size: 14,
                       ),
                     ],
                   ),

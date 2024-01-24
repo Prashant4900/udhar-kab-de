@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/gen/assets.gen.dart';
 import 'package:mobile/models/hotspots/hotspot_models.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/hotspots/bloc/hotspot_bloc.dart';
 import 'package:mobile/views/hotspots/provider/hotspot_type_provider.dart';
@@ -88,26 +89,26 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                             children: [
                               Text(
                                 hotspotItem.hotspotType ?? '',
-                                style: context.textTheme.bodyLarge!.copyWith(
+                                style: context.subtitleBoldStyle.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              verticalMargin8,
+                              verticalMargin4,
                               Text(
                                 hotspotItem.hotspotName ?? '',
-                                style: context.textTheme.bodyMedium,
+                                style: context.captionStyle,
                                 maxLines: 3,
                               ),
-                              verticalMargin8,
+                              verticalMargin4,
                               SizedBox(
-                                width: context.mediaQuery.size.width * 0.77,
+                                width: context.mediaQuery.size.width * 0.6,
                                 child: Text(
                                   hotspotItem.hotspotLocation ?? '',
-                                  style: context.textTheme.bodyMedium,
+                                  style: context.captionStyle,
                                   maxLines: 3,
                                 ),
                               ),
-                              verticalMargin8,
+                              verticalMargin12,
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -126,8 +127,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                                     },
                                     child: Text(
                                       'EDIT',
-                                      style: context.textTheme.titleMedium!
-                                          .copyWith(
+                                      style: context.captionBoldStyle.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: context.colorScheme.primary,
                                       ),
@@ -146,8 +146,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                                     },
                                     child: Text(
                                       'DELETE',
-                                      style: context.textTheme.titleMedium!
-                                          .copyWith(
+                                      style: context.captionBoldStyle.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: context.colorScheme.primary,
                                       ),
@@ -162,8 +161,7 @@ class _MyHotSpotsScreenState extends State<MyHotSpotsScreen> {
                                     },
                                     child: Text(
                                       'SHARE',
-                                      style: context.textTheme.titleMedium!
-                                          .copyWith(
+                                      style: context.captionBoldStyle.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: context.colorScheme.primary,
                                       ),
@@ -409,23 +407,23 @@ Widget getHotspotIcon(String hotspotType) {
   switch (hotspotType.toLowerCase()) {
     case 'food':
       return Assets.svg.food.svg(
-        width: 20,
+        width: 18,
       );
     case 'snacks':
       return Assets.svg.snacks2.svg(
-        width: 20,
+        width: 18,
       );
     case 'petrol':
       return Assets.svg.petrol.svg(
-        width: 20,
+        width: 18,
       );
     case 'shopping':
       return Assets.svg.shopping.svg(
-        width: 20,
+        width: 18,
       );
     default:
       return Assets.svg.snacks1.svg(
-        width: 20,
+        width: 18,
       );
   }
 }

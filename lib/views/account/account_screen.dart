@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/constants/commons.dart';
 import 'package:mobile/gen/assets.gen.dart';
 import 'package:mobile/routes/route_manager.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utils/date_time.dart';
 import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/views/auth/bloc/auth_bloc.dart';
@@ -33,7 +32,7 @@ class MyAccountScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Padding(
-          padding: allPadding16,
+          padding: horizontalPadding16,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +44,7 @@ class MyAccountScreen extends StatelessWidget {
                   icon: const Icon(
                     Icons.location_on_outlined,
                     color: Colors.grey,
-                    size: 18,
+                    size: 16,
                   ),
                   onTap: () =>
                       Navigator.pushNamed(context, MyRoutes.hotspotsScreen),
@@ -96,6 +95,7 @@ class MyAccountScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                verticalMargin24,
               ],
             ),
           ),
@@ -115,9 +115,8 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('${state.user}');
     return Container(
-      height: 150,
+      height: 135,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -140,7 +139,7 @@ class UserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    radius: 30,
+                    radius: 25,
                     backgroundColor: const Color(0xFFF1F1F1),
                     child: (state.user?.name != null && state.user?.name != '')
                         ? Text(
@@ -157,23 +156,20 @@ class UserCard extends StatelessWidget {
                   ),
                   horizontalMargin16,
                   SizedBox(
-                    height: 65,
+                    height: 55,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
                           (state.user?.name != null && state.user?.name != '')
                               ? state.user!.name
                               : 'Guest User',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: context.titleStyle.copyWith(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
+                        verticalMargin8,
                         Text(
                           (state.user?.email != '' && state.user?.email != null)
                               ? state.user!.email
@@ -181,10 +177,9 @@ class UserCard extends StatelessWidget {
                                       state.user?.phone != null)
                                   ? state.user!.phone
                                   : '',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Colors.white,
-                                  ),
+                          style: context.captionBoldStyle.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -199,14 +194,14 @@ class UserCard extends StatelessWidget {
                   Text(
                     'Joined At: '
                     '${formatDate(state.user?.registration ?? '')}',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                        ),
+                    style: context.captionStyle.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                   const Spacer(),
                   const Icon(
                     Icons.arrow_forward_ios,
-                    size: 18,
+                    size: 14,
                     color: Colors.white,
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/commons.dart';
+import 'package:mobile/theme/theme_manager.dart';
 import 'package:mobile/utils/extensions.dart';
 
 class MyHomeScreen extends StatelessWidget {
@@ -22,17 +23,12 @@ class MyHomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         'No New Groups',
-                        style: context.textTheme.titleLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                        style: context.bodyBoldStyle,
                       ),
                       verticalMargin12,
                       Text(
                         'you can create new group as your wish',
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontSize: 14,
-                        ),
+                        style: context.subtitleStyle,
                         maxLines: 2,
                       ),
                     ],
@@ -52,40 +48,31 @@ class MyHomeScreen extends StatelessWidget {
               children: [
                 Text(
                   'Invite your Friends',
-                  style: context.textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  style: context.bodyBoldStyle,
                 ),
                 verticalMargin12,
                 Text(
                   'Clicking the link allow your friends to join the group on android, ios, web, windows & mac.',
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontSize: 14,
-                  ),
+                  style: context.subtitleStyle,
                   maxLines: 2,
                 ),
+                verticalMargin12,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Share link',
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: context.colorScheme.primary,
-                        ),
+                    Text(
+                      'Share link',
+                      style: context.buttonMediumStyle.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colorScheme.primary,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Share Nearby',
-                        style: context.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: context.colorScheme.primary,
-                        ),
+                    horizontalMargin12,
+                    Text(
+                      'Share Nearby',
+                      style: context.buttonMediumStyle.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colorScheme.primary,
                       ),
                     ),
                   ],
